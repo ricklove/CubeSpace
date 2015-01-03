@@ -70,4 +70,7 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Create the feature graphic template
 
-### 6:13-
+### 6:13-6:40
+
+- Create 3D block with grid pattern
+

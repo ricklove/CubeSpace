@@ -59,7 +59,15 @@ Use cutting edge motion tracking technology to control the game with your device
 - Enter Description in Google Play
 - Save Description
 
-### 5:14-
+### 5:14-5:35
 
 - Create the promotional graphic scenes
 - Create Icon
+
+## Hour 2
+
+### 5:39-6:12
+
+- Create the feature graphic template
+
+### 6:13-

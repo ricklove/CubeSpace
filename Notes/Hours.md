@@ -53,6 +53,13 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Write Info
 
-### 5:12
+### 5:12-5:13
 
--  
+- Create Google Play App
+- Enter Description in Google Play
+- Save Description
+
+### 5:14-
+
+- Create the promotional graphic scenes
+- Create Icon

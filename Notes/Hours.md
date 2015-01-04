@@ -74,3 +74,69 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Create 3D block with grid pattern
 
+## Hour 3
+
+### 2015-01-04 4:00-4:11
+
+- Create Task List
+
+### 4:12-5:20
+
+- Create planet test scene
+- Create example planet with some blocks
+- Start Rotate the planet
+
+### 5:30-5:37
+
+- Finish Rotate the planet
+
+
+
+
+## TODO
+
+## Implement Fun Toy 
+
+- Create Planet Test Scene
+- Place planet core
+- Rotate planet with Standard Inputs
+	- Up/Down Keys
+	- Left/Right Keys
+	- Tap/Click (In Side Regions)
+	- Drag/Swipe
+- Create Next Block (size of random planet side)
+- Drop Block
+	- Space/Enter Key
+	- Tap/Click (In Center Region)
+
+- Create Main Scene
+- Add Game State
+- Game Over at 10x10x10
+
+- Add motion tracking inputs
+	- Swipe to rotate
+	- Grow (hand towards cam) to place
+
+## Make It Shine
+
+- Add timer to game
+- Change color of each block as time passes
+- Display dimensions of each block
+
+## Publish
+
+- Remake Icon
+- Test on Device
+
+- Remake Promotional Graphics
+- Make Screenshots
+- Deploy to Google Play
+
+## Publicize
+
+- Release Game Make Video
+- Make Game Play Video
+- Make Parallax Website
+- Announce on Twitter/Facebook
+- Announce on Unity forums
+- Announce on Reddit

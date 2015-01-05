@@ -4,6 +4,11 @@ using System.Collections;
 public class CraneController : MonoBehaviour
 {
     public static CraneController Instance;
+    public delegate void CraneAction();
+    public event CraneAction BlockDropped;
+    public event CraneAction BlockDropFailed;
+    
+    public bool shouldDropOnlyWhenCorrect = true;
 
     private GameObject _blockProto;
     public GameObject _attachedBlock;
@@ -52,10 +57,47 @@ public class CraneController : MonoBehaviour
         // Align block to planet: Block is already centered
     }
 
+    public void Reset()
+    {
+        Destroy(_attachedBlock);
+        _attachedBlock = null;
+    }
+
     public void DropBlock()
     {
+        if (_attachedBlock == null) { return; }
+
+        if (shouldDropOnlyWhenCorrect)
+        {
+            if (!IsCorrectPosition())
+            {
+                Debug.Log("Not Correct: " + _attachedBlock.transform.localScale);
+                Debug.Log("_planet.width: " + _planet.width);
+                Debug.Log("_planet.height: " + _planet.height);
+
+                if (BlockDropFailed != null)
+                {
+                    BlockDropFailed();
+                }
+
+                return;
+            }
+        }
+
         _planet.AddBlockToPlanet(_attachedBlock);
+
+        if (BlockDropped != null)
+        {
+            BlockDropped();
+        }
+
         _attachedBlock = null;
+    }
+
+    public bool IsCorrectPosition()
+    {
+        return _attachedBlock.transform.localScale.x == _planet.width
+            && _attachedBlock.transform.localScale.y == _planet.height;
     }
 
     private GameObject CreateBlock()

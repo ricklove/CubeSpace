@@ -138,17 +138,18 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Align falling block rotation
 
+### 8:30-9:02
+
+- Add Game logic
+- Add Extra time on correct
+
 
 
 ## TODO
 
 ## Implement Fun Toy 
 
-- Move camera back as planet grows
-
-- Align falling block rotation
-- Make blocks fall with gravity?
- 
+- Only allow correct positioning option
 
 - Create Main Scene
 - Add Game State

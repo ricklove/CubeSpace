@@ -18,6 +18,10 @@ public class CameraController : MonoBehaviour
         var crane = FindCrane();
         var cam = GetComponent<Camera>();
 
+        var maxSize = Mathf.Max(planet.width, planet.height, planet.depth);
+
+        cam.transform.position = new Vector3(0, 0, -5 - maxSize);
+
         //// Zoom to world size
         //var planetBottomLeft = new Vector3(-0.5f * planet.width, -0.5f * planet.height, 0);
 

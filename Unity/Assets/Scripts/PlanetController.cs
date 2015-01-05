@@ -15,9 +15,9 @@ public class PlanetController : MonoBehaviour
     public Axis heightAxis;
     public Axis depthAxis;
 
-    public float width;
-    public float height;
-    public float depth;
+    public int width;
+    public int height;
+    public int depth;
 
     public float widthCenter;
     public float heightCenter;
@@ -52,7 +52,9 @@ public class PlanetController : MonoBehaviour
         _zAxis = _rotationTarget.transform.Find("Z").gameObject;
         _nextBlockCenter = _rotationTarget.transform.Find("NextBlockCenter").gameObject;
 
-        _zeroRef = transform.Find("ZeroRef").gameObject; 
+        _zeroRef = transform.Find("ZeroRef").gameObject;
+
+        RepositionPlanet();
     }
 
     void Update()
@@ -87,13 +89,30 @@ public class PlanetController : MonoBehaviour
         UpdateFallingBlocks();
     }
 
+    public void Reset()
+    {
+        foreach (Transform b in _blocks.transform)
+        {
+            Destroy(b.gameObject);
+        }
+
+        foreach (Transform b in _blocksFalling.transform)
+        {
+            Destroy(b.gameObject);
+        }
+
+        RepositionPlanet();
+        Rotate(RotationDirection.Up);
+    }
+
     private void UpdateFallingBlocks()
     {
         var blocksDoneFalling = new List<BlockController>();
         foreach (Transform fBlock in _blocksFalling.transform)
         {
             var b = fBlock.GetComponent<BlockController>();
-            if (b._targetPosition == b.transform.localPosition)
+            if (b._targetPosition == b.transform.localPosition
+                && b._targetRotation == b.transform.localRotation)
             {
                 // Move to blocks
                 blocksDoneFalling.Add(b);
@@ -134,9 +153,9 @@ public class PlanetController : MonoBehaviour
         var size = bounds.size;
         var center = bounds.center;
 
-        width = Mathf.Abs(GetAxisValue(size, widthAxis));
-        height = Mathf.Abs(GetAxisValue(size, heightAxis));
-        depth = Mathf.Abs(GetAxisValue(size, depthAxis));
+        width = Mathf.RoundToInt(Mathf.Abs(GetAxisValue(size, widthAxis)));
+        height = Mathf.RoundToInt(Mathf.Abs(GetAxisValue(size, heightAxis)));
+        depth = Mathf.RoundToInt(Mathf.Abs(GetAxisValue(size, depthAxis)));
 
         widthCenter = GetAxisValue(center, widthAxis);
         heightCenter = GetAxisValue(center, heightAxis);
@@ -212,6 +231,7 @@ public class PlanetController : MonoBehaviour
     {
         // Get block extents in each direction (block positions)
         var bBounds = new List<Bounds>();
+        bBounds.Add(new Bounds(new Vector3(), new Vector3(1, 1, 1)));
 
         foreach (Transform b in _blocks.transform)
         {
@@ -228,6 +248,7 @@ public class PlanetController : MonoBehaviour
             //Debug.Log("Target Block Bounds:" + bounds + " min: " + bounds.min + "max: " + bounds.max);
         }
 
+
         var minX = bBounds.Min(b => b.min.x);
         var minY = bBounds.Min(b => b.min.y);
         var minZ = bBounds.Min(b => b.min.z);
@@ -242,9 +263,11 @@ public class PlanetController : MonoBehaviour
 
     public void AddBlockToPlanet(GameObject block)
     {
-        block.transform.parent = _blocksFalling.transform;
+        block.transform.parent = _rotationTarget.transform;
         var targetPosition = _nextBlockCenter.transform.localPosition;
         var targetRotation = block.transform.localRotation;
+
+        block.transform.parent = _blocksFalling.transform;
 
         targetRotation = RoundToSquareAngle(targetRotation);
 

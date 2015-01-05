@@ -36,9 +36,9 @@ public class CraneController : MonoBehaviour
     {
         var planet = FindPlanet();
         //var size = planet.GetPlanetSize();
-        var width = planet.Width;
-        var height = planet.Height;
-        var depth = planet.Depth;
+        var width = planet.width;
+        var height = planet.height;
+        var depth = planet.depth;
 
         //Debug.Log("PlanetSize: " + size);
 

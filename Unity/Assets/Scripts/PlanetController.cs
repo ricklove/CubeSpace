@@ -8,14 +8,19 @@ public class PlanetController : MonoBehaviour
     public static PlanetController Instance;
 
     public float timeToRotate = 0.25f;
+    public float timeToPosition = 0.5f;
 
-    public Axis WidthAxis;
-    public Axis HeightAxis;
-    public Axis DepthAxis;
+    public Axis widthAxis;
+    public Axis heightAxis;
+    public Axis depthAxis;
 
-    public float Width;
-    public float Height;
-    public float Depth;
+    public float width;
+    public float height;
+    public float depth;
+
+    public float widthCenter;
+    public float heightCenter;
+    public float depthCenter;
 
     private GameObject _rotation;
     private GameObject _rotationTarget;
@@ -50,16 +55,23 @@ public class PlanetController : MonoBehaviour
         {
             _rotation.transform.localRotation =
                 Quaternion.Slerp(_rotation.transform.localRotation, _rotationTarget.transform.localRotation, Time.deltaTime / timeToRotate);
-
-            // Center position
-            //var diff = _rotationTarget.transform.localPosition - _rotation.transform.localPosition;
-            //var distance = diff.magnitude;
-            //distance = Mathf.Min(distance, 0.5f * Time.deltaTime / timeToRotate);
-            //_rotation.transform.localPosition = diff.normalized * distance;
-            
-            //_rotation.transform.localPosition = _rotationTarget.transform.localPosition;
         }
 
+        // Center position
+        var diff = _rotationTarget.transform.localPosition - _rotation.transform.localPosition;
+
+        if (diff.sqrMagnitude > 0)
+        {
+            var distance = diff.magnitude;
+            var maxDistance = Time.deltaTime / timeToPosition;
+
+            if (distance > maxDistance)
+            {
+                distance = maxDistance;
+            }
+
+            _rotation.transform.localPosition += diff.normalized * distance;
+        }
 
         // Update axis measures
         UpdateAxisMeasures();
@@ -73,32 +85,44 @@ public class PlanetController : MonoBehaviour
         var yVal = _yAxis.transform.position - _rotationTarget.transform.position;
         var zVal = _zAxis.transform.position - _rotationTarget.transform.position;
 
-        WidthAxis = GetAxis(xVal, yVal, zVal, (v) => { return v.x; });
-        HeightAxis = GetAxis(xVal, yVal, zVal, (v) => { return v.y; });
-        DepthAxis = GetAxis(xVal, yVal, zVal, (v) => { return v.z; });
+        widthAxis = GetAxis(xVal, yVal, zVal, (v) => { return v.x; });
+        heightAxis = GetAxis(xVal, yVal, zVal, (v) => { return v.y; });
+        depthAxis = GetAxis(xVal, yVal, zVal, (v) => { return v.z; });
 
         // Update Width, Height, Depth values
-        var size = GetPlanetSize();
+        var bounds = GetPlanetBounds();
+        var size = bounds.size;
+        var center = bounds.center;
 
-        Width = GetAxisLength(size, WidthAxis);
-        Height = GetAxisLength(size, HeightAxis);
-        Depth = GetAxisLength(size, DepthAxis);
+        width = Mathf.Abs(GetAxisValue(size, widthAxis));
+        height = Mathf.Abs(GetAxisValue(size, heightAxis));
+        depth = Mathf.Abs(GetAxisValue(size, depthAxis));
+
+        widthCenter = GetAxisValue(center, widthAxis);
+        heightCenter = GetAxisValue(center, heightAxis);
+        depthCenter = GetAxisValue(center, depthAxis);
     }
 
-    private float GetAxisLength(Vector3 size, Axis axis)
+    private float GetAxisValue(Vector3 value, Axis axis)
     {
-        if (axis == Axis.X) { return size.x; }
-        else if (axis == Axis.Y) { return size.y; }
-        else if (axis == Axis.Z) { return size.z; }
+        if (axis == Axis.X) { return value.x; }
+        else if (axis == Axis.XNegative) { return -value.x; }
+        else if (axis == Axis.Y) { return value.y; }
+        else if (axis == Axis.YNegative) { return -value.y; }
+        else if (axis == Axis.Z) { return value.z; }
+        else if (axis == Axis.ZNegative) { return -value.z; }
 
         throw new System.ArgumentException("No Axis");
     }
 
     private static Axis GetAxis(Vector3 x, Vector3 y, Vector3 z, System.Func<Vector3, float> doGetVal)
     {
-        if (Mathf.Abs(doGetVal(x)) > 0.1f) { return Axis.X; }
-        else if (Mathf.Abs(doGetVal(y)) > 0.1f) { return Axis.Y; }
-        else if (Mathf.Abs(doGetVal(z)) > 0.1f) { return Axis.Z; }
+        if (doGetVal(x) > 0.1f) { return Axis.X; }
+        else if (doGetVal(x) < -0.1f) { return Axis.XNegative; }
+        else if (doGetVal(y) > 0.1f) { return Axis.Y; }
+        else if (doGetVal(y) < -0.1f) { return Axis.YNegative; }
+        else if (doGetVal(z) > 0.1f) { return Axis.Z; }
+        else if (doGetVal(z) < -0.1f) { return Axis.ZNegative; }
 
         throw new System.ArgumentException("No Axis");
     }
@@ -129,26 +153,22 @@ public class PlanetController : MonoBehaviour
 
         UpdateAxisMeasures();
 
-        // TODO: Calculate the center from the core piece
-        //_rotationTarget.transform.localPosition = new Vector3(
-        //        Width * 0.5f,
-        //        Height * 0.5f,
-        //        Depth * 0.5f
-        //        );
+        // Calculate the center
+        _rotationTarget.transform.localPosition = new Vector3(
+                -widthCenter,
+                -heightCenter,
+                -depthCenter
+                );
     }
 
-    public Vector3 GetPlanetSize()
+    public Bounds GetPlanetBounds()
     {
         // Get block extents in each direction (block positions)
         var bBounds = new List<Bounds>();
 
         foreach (Transform b in _blocks.transform)
         {
-            // TODO: FIX THIS
             var bounds = new Bounds(b.localPosition, new Vector3(1, 1, 1));
-            //var bounds = new Bounds(b.localPosition, Vector3.zero);
-            //var bounds = new Bounds(b.localPosition, b.localScale);
-            //var bounds = b.GetComponent<BlockController>().GetWorldBounds();
             bBounds.Add(bounds);
             Debug.Log("Block Bounds:" + bounds + " min: " + bounds.min + "max: " + bounds.max);
         }
@@ -160,8 +180,9 @@ public class PlanetController : MonoBehaviour
         var maxY = bBounds.Max(b => b.max.y);
         var maxZ = bBounds.Max(b => b.max.z);
 
-        //return new Vector3(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
-        return new Vector3(maxX - minX, maxY - minY, maxZ - minZ);
+        return new Bounds(
+            new Vector3((maxX + minX) * 0.5f, (maxY + minY) * 0.5f, (maxZ + minZ) * 0.5f),
+            new Vector3(maxX - minX, maxY - minY, maxZ - minZ));
     }
 
     public void AddBlockToPlanet(GameObject block)
@@ -183,5 +204,8 @@ public enum Axis
 {
     X,
     Y,
-    Z
+    Z,
+    XNegative,
+    YNegative,
+    ZNegative
 }

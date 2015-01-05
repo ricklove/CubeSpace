@@ -108,7 +108,11 @@ Use cutting edge motion tracking technology to control the game with your device
 - Calculate planet size
 - Wait: Center planet on rotation
 
-###
+### 4:13-
+
+- Finish: Calculate Center of Planet
+- Drop block
+- Align current block
 
 
 ## TODO

@@ -596,6 +596,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeToRotate: .25
+  timeToPosition: .5
+  widthAxis: 0
+  heightAxis: 0
+  depthAxis: 0
+  width: 0
+  height: 0
+  depth: 0
+  widthCenter: 0
+  heightCenter: 0
+  depthCenter: 0
 --- !u!1 &303735720
 GameObject:
   m_ObjectHideFlags: 0

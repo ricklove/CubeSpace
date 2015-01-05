@@ -29,6 +29,7 @@ public class PlanetController : MonoBehaviour
     private GameObject _zAxis;
 
     private GameObject _blocks;
+    private GameObject _blocksFalling;
 
     void Awake()
     {
@@ -41,6 +42,7 @@ public class PlanetController : MonoBehaviour
         _rotation = transform.Find("Rotation").gameObject;
         _rotationTarget = transform.Find("RotationTarget").gameObject;
         _blocks = _rotation.transform.Find("Blocks").gameObject;
+        _blocksFalling = _rotation.transform.Find("BlocksFalling").gameObject;
 
         _xAxis = _rotationTarget.transform.Find("X").gameObject;
         _yAxis = _rotationTarget.transform.Find("Y").gameObject;
@@ -76,6 +78,8 @@ public class PlanetController : MonoBehaviour
         // Update axis measures
         UpdateAxisMeasures();
 
+        // Move falling blocks
+        // Adjust Axis measures with falling blocks
     }
 
     private void UpdateAxisMeasures()
@@ -187,7 +191,9 @@ public class PlanetController : MonoBehaviour
 
     public void AddBlockToPlanet(GameObject block)
     {
-        block.transform.parent = _blocks.transform;
+        block.transform.parent = _blocksFalling.transform;
+
+        // TODO: Add target axis and measure
     }
 
 }

@@ -3,10 +3,17 @@ using System.Collections;
 
 public class CraneController : MonoBehaviour
 {
+    public static CraneController Instance;
 
     private GameObject _blockProto;
     private GameObject _attachedBlock;
     private PlanetController _planet;
+
+    void Awake()
+    {
+        if (Instance != null) { throw new UnityException("Only One Crane can be created per scene"); }
+        Instance = this;
+    }
 
     void Start()
     {
@@ -28,8 +35,16 @@ public class CraneController : MonoBehaviour
     {
         if (_attachedBlock == null)
         {
-           _attachedBlock = CreateBlock();
+            _attachedBlock = CreateBlock();
         }
+
+        // Align block to planet: Block is already centered
+    }
+
+    public void DropBlock()
+    {
+        _planet.AddBlockToPlanet(_attachedBlock);
+        _attachedBlock = null;
     }
 
     private GameObject CreateBlock()

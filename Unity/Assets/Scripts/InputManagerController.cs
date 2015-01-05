@@ -6,6 +6,7 @@ public class InputManagerController : MonoBehaviour
     public float rotationsPerSecond = 1.0f;
 
     private PlanetController _planet;
+    private CraneController _crane;
     private float _timeAtLastRotation;
 
 
@@ -18,16 +19,23 @@ public class InputManagerController : MonoBehaviour
         if (_planet == null)
         {
             _planet = PlanetController.Instance;
-            //_planet = transform.root.Find("Planet").GetComponent<PlanetController>();
         }
 
         return _planet;
     }
 
+    private CraneController FindCrane()
+    {
+        if (_crane == null)
+        {
+            _crane = CraneController.Instance;
+        }
+
+        return _crane;
+    }
+
     void Update()
     {
-        var planet = FindPlanet();
-
         var timePerRotation = 1.0f / rotationsPerSecond;
 
         if (Input.GetAxis("Vertical") != 0
@@ -36,6 +44,8 @@ public class InputManagerController : MonoBehaviour
             if (_timeAtLastRotation + timePerRotation < Time.time)
             {
                 _timeAtLastRotation = Time.time;
+
+                var planet = FindPlanet();
 
                 // Rotate Planet
                 if (Input.GetAxis("Vertical") > 0)
@@ -63,7 +73,9 @@ public class InputManagerController : MonoBehaviour
         // TODO: Drop Block
         if (Input.GetButtonDown("Fire1"))
         {
+            var crane = FindCrane();
 
+            crane.DropBlock();
         }
     }
 

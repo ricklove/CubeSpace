@@ -14,9 +14,10 @@ public class BlockController : MonoBehaviour
 
     void Start()
     {
-        _frontBack = transform.Find("FrontBack").gameObject;
-        _leftRight = transform.Find("LeftRight").gameObject;
-        _topBottom = transform.Find("TopBottom").gameObject;
+        var position = transform.Find("Position").gameObject;
+        _frontBack = position.transform.Find("FrontBack").gameObject;
+        _leftRight = position.transform.Find("LeftRight").gameObject;
+        _topBottom = position.transform.Find("TopBottom").gameObject;
     }
 
     void Update()

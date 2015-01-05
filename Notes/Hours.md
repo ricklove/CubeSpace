@@ -86,33 +86,38 @@ Use cutting edge motion tracking technology to control the game with your device
 - Create example planet with some blocks
 - Start Rotate the planet
 
+## Hour 4
+
 ### 5:30-5:37
 
 - Finish Rotate the planet
 
+### 5:38-6:00
 
+- Organize Tasks
+- Get Planet Dimensions
 
+### 6:01-6:30
+
+- Start Create Next Block
 
 ## TODO
 
 ## Implement Fun Toy 
 
-- Create Planet Test Scene
-- Place planet core
-- Rotate planet with Standard Inputs
-	- Up/Down Keys
-	- Left/Right Keys
-	- Tap/Click (In Side Regions)
-	- Drag/Swipe
 - Create Next Block (size of random planet side)
 - Drop Block
 	- Space/Enter Key
-	- Tap/Click (In Center Region)
+
 
 - Create Main Scene
 - Add Game State
 - Game Over at 10x10x10
 
+- Add touch/mouse controls
+	- Tap/Click (In Side Regions)
+	- Drag/Swipe
+	- Tap/Click (In Center Region)
 - Add motion tracking inputs
 	- Swipe to rotate
 	- Grow (hand towards cam) to place

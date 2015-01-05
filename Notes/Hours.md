@@ -117,7 +117,14 @@ Use cutting edge motion tracking technology to control the game with your device
 - Block is already centered
 - Start: Drop Block
 
-## 
+## Hour 6
+
+### 4:56-5:30
+
+- Find block target position
+- Drop block on target
+
+### 5:31
 
 
 
@@ -125,9 +132,8 @@ Use cutting edge motion tracking technology to control the game with your device
 
 ## Implement Fun Toy 
 
-- Create Next Block (size of random planet side)
-- Drop Block
-	- Space/Enter Key
+- Align falling block rotation
+- Move camera back as planet grows
 
 
 - Create Main Scene

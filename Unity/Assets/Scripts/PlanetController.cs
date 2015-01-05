@@ -9,6 +9,7 @@ public class PlanetController : MonoBehaviour
 
     public float timeToRotate = 0.25f;
     public float timeToPosition = 0.5f;
+    public float timeToFall = 1f;
 
     public Axis widthAxis;
     public Axis heightAxis;
@@ -27,6 +28,7 @@ public class PlanetController : MonoBehaviour
     private GameObject _xAxis;
     private GameObject _yAxis;
     private GameObject _zAxis;
+    private GameObject _nextBlockCenter;
 
     private GameObject _blocks;
     private GameObject _blocksFalling;
@@ -47,6 +49,7 @@ public class PlanetController : MonoBehaviour
         _xAxis = _rotationTarget.transform.Find("X").gameObject;
         _yAxis = _rotationTarget.transform.Find("Y").gameObject;
         _zAxis = _rotationTarget.transform.Find("Z").gameObject;
+        _nextBlockCenter = _rotationTarget.transform.Find("NextBlockCenter").gameObject;
 
     }
 
@@ -79,7 +82,36 @@ public class PlanetController : MonoBehaviour
         UpdateAxisMeasures();
 
         // Move falling blocks
-        // Adjust Axis measures with falling blocks
+        UpdateFallingBlocks();
+    }
+
+    private void UpdateFallingBlocks()
+    {
+        var blocksDoneFalling = new List<BlockController>();
+        foreach (Transform fBlock in _blocksFalling.transform)
+        {
+            var b = fBlock.GetComponent<BlockController>();
+            if (b._targetPosition == b.transform.localPosition)
+            {
+                // Move to blocks
+                blocksDoneFalling.Add(b);
+            }
+            else
+            {
+                // Fall
+                var diff = b._targetPosition - b.transform.localPosition;
+                var distance = diff.magnitude;
+                var maxFallDistance = Time.deltaTime / timeToFall;
+                distance = Mathf.Min(distance, maxFallDistance);
+
+                b.transform.localPosition += diff.normalized * distance;
+            }
+        }
+
+        foreach (var b in blocksDoneFalling)
+        {
+            b.transform.parent = _blocks.transform;
+        }
     }
 
     private void UpdateAxisMeasures()
@@ -163,6 +195,10 @@ public class PlanetController : MonoBehaviour
                 -heightCenter,
                 -depthCenter
                 );
+
+        // Calculate the next block center
+        var relPos = new Vector3(widthCenter, heightCenter, depthCenter - 0.5f - depth * 0.5f);
+        _nextBlockCenter.transform.position = _rotationTarget.transform.position + relPos;
     }
 
     public Bounds GetPlanetBounds()
@@ -175,6 +211,14 @@ public class PlanetController : MonoBehaviour
             var bounds = new Bounds(b.localPosition, new Vector3(1, 1, 1));
             bBounds.Add(bounds);
             Debug.Log("Block Bounds:" + bounds + " min: " + bounds.min + "max: " + bounds.max);
+        }
+
+        // Add target bounds for falling blocks
+        foreach (Transform b in _blocksFalling.transform)
+        {
+            var bounds = new Bounds(b.GetComponent<BlockController>()._targetPosition, new Vector3(1, 1, 1));
+            bBounds.Add(bounds);
+            Debug.Log("Target Block Bounds:" + bounds + " min: " + bounds.min + "max: " + bounds.max);
         }
 
         var minX = bBounds.Min(b => b.min.x);
@@ -192,8 +236,14 @@ public class PlanetController : MonoBehaviour
     public void AddBlockToPlanet(GameObject block)
     {
         block.transform.parent = _blocksFalling.transform;
+        var targetPosition = _nextBlockCenter.transform.localPosition;
 
-        // TODO: Add target axis and measure
+        block.GetComponent<BlockController>()._targetPosition = targetPosition;
+    }
+
+    private bool IsNegative(Axis axis)
+    {
+        return axis == Axis.XNegative || axis == Axis.YNegative || axis == Axis.ZNegative;
     }
 
 }

@@ -3,6 +3,7 @@ using System.Collections;
 
 public class BlockController : MonoBehaviour
 {
+    public Vector3 _targetPosition;
 
     private GameObject _frontBack;
     private GameObject _leftRight;

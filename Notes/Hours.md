@@ -101,6 +101,16 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Start Create Next Block
 
+## Hour 5
+
+### 3:45-4:12
+
+- Calculate planet size
+- Wait: Center planet on rotation
+
+###
+
+
 ## TODO
 
 ## Implement Fun Toy 

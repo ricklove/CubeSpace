@@ -45,12 +45,23 @@ public class PlanetController : MonoBehaviour
 
     void Update()
     {
+        // Rotate to target
         if (_rotation.transform.localRotation != _rotationTarget.transform.localRotation)
         {
             _rotation.transform.localRotation =
                 Quaternion.Slerp(_rotation.transform.localRotation, _rotationTarget.transform.localRotation, Time.deltaTime / timeToRotate);
+
+            // Center position
+            //var diff = _rotationTarget.transform.localPosition - _rotation.transform.localPosition;
+            //var distance = diff.magnitude;
+            //distance = Mathf.Min(distance, 0.5f * Time.deltaTime / timeToRotate);
+            //_rotation.transform.localPosition = diff.normalized * distance;
+            
+            //_rotation.transform.localPosition = _rotationTarget.transform.localPosition;
         }
 
+
+        // Update axis measures
         UpdateAxisMeasures();
 
     }
@@ -117,6 +128,13 @@ public class PlanetController : MonoBehaviour
         }
 
         UpdateAxisMeasures();
+
+        // TODO: Calculate the center from the core piece
+        //_rotationTarget.transform.localPosition = new Vector3(
+        //        Width * 0.5f,
+        //        Height * 0.5f,
+        //        Depth * 0.5f
+        //        );
     }
 
     public Vector3 GetPlanetSize()

@@ -143,6 +143,9 @@ Use cutting edge motion tracking technology to control the game with your device
 - Add Game logic
 - Add Extra time on correct
 
+### 9:03-9:14
+
+- Show time change
 
 
 ## TODO

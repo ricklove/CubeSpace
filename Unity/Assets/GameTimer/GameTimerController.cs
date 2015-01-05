@@ -12,7 +12,8 @@ public class GameTimerController : MonoBehaviour
     private float _timeAtStart;
     private float _timeToRun;
 
-    private Text _text;
+    private Text _timeRemaining;
+    private Text _timeRemainingChanged;
 
     public float RemainingTime
     {
@@ -27,7 +28,8 @@ public class GameTimerController : MonoBehaviour
 
     void Start()
     {
-        _text = GetComponentInChildren<Canvas>().GetComponentInChildren<Text>();
+        _timeRemaining = GetComponentInChildren<Canvas>().transform.FindChild("Time").GetComponent<Text>();
+        _timeRemainingChanged = GetComponentInChildren<Canvas>().transform.FindChild("Change").GetComponent<Text>();
 
         // TESTING
         ResetTimer(15);
@@ -52,17 +54,22 @@ public class GameTimerController : MonoBehaviour
             }
 
             // Show remaining time
-            _text.text = "" + Mathf.FloorToInt(remainingTime / 60) + ":" + Mathf.FloorToInt(remainingTime % 60).ToString("D2");
+            _timeRemaining.text = "" + Mathf.FloorToInt(remainingTime / 60) + ":" + Mathf.FloorToInt(remainingTime % 60).ToString("D2");
 
             if (remainingTime < 10)
             {
-                _text.color = Color.red;
+                _timeRemaining.color = Color.red;
             }
             else
             {
-                _text.color = Color.white;
+                _timeRemaining.color = Color.white;
                 //_text.color = Color.green;
             }
+
+            // Fade out change
+            //_timeRemainingChanged.color = _timeRemainingChanged.color - new Color(0, 0, 0, 0.05f);
+            _timeRemainingChanged.color *= new Color(1, 1, 1, 0.95f);
+
         }
     }
 
@@ -86,11 +93,15 @@ public class GameTimerController : MonoBehaviour
     public void AddTime(float time)
     {
         _timeToRun += time;
+        _timeRemainingChanged.text = "+" + time;
+        _timeRemainingChanged.color = Color.green;
     }
 
     public void RemoveTime(float time)
     {
         _timeToRun -= time;
+        _timeRemainingChanged.text = "-" + time;
+        _timeRemainingChanged.color = Color.red;
     }
 
 

@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\BlockController.cs" />
+     <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\CraneController.cs" />
      <Compile Include="Assets\Scripts\InputManagerController.cs" />
      <Compile Include="Assets\Scripts\PlanetController.cs" />

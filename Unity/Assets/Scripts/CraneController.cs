@@ -9,6 +9,8 @@ public class CraneController : MonoBehaviour
     private GameObject _attachedBlock;
     private PlanetController _planet;
 
+    private float? timeToCreateBlock;
+
     void Awake()
     {
         if (Instance != null) { throw new UnityException("Only One Crane can be created per scene"); }
@@ -35,7 +37,16 @@ public class CraneController : MonoBehaviour
     {
         if (_attachedBlock == null)
         {
-            _attachedBlock = CreateBlock();
+            if (timeToCreateBlock == null)
+            {
+                timeToCreateBlock = Time.time + 1f;
+            }
+
+            if (Time.time > timeToCreateBlock)
+            {
+                timeToCreateBlock = null;
+                _attachedBlock = CreateBlock();
+            }
         }
 
         // Align block to planet: Block is already centered

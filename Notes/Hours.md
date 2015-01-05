@@ -124,9 +124,15 @@ Use cutting edge motion tracking technology to control the game with your device
 - Find block target position
 - Drop block on target
 
-### 5:31
+### 5:31-5:50
 
+- Push planet back to surface at z=0
 
+## Hour ...
+
+### 5:51
+
+- Zoom camera out as planet grows
 
 ## TODO
 

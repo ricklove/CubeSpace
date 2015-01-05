@@ -29,6 +29,7 @@ public class PlanetController : MonoBehaviour
     private GameObject _yAxis;
     private GameObject _zAxis;
     private GameObject _nextBlockCenter;
+    private GameObject _zeroRef;
 
     private GameObject _blocks;
     private GameObject _blocksFalling;
@@ -51,6 +52,7 @@ public class PlanetController : MonoBehaviour
         _zAxis = _rotationTarget.transform.Find("Z").gameObject;
         _nextBlockCenter = _rotationTarget.transform.Find("NextBlockCenter").gameObject;
 
+        _zeroRef = transform.Find("ZeroRef").gameObject; 
     }
 
     void Update()
@@ -187,18 +189,21 @@ public class PlanetController : MonoBehaviour
             rObj.transform.RotateAround(rObj.transform.position, Vector3.up, 90);
         }
 
+        RepositionPlanet();
+    }
+
+    private void RepositionPlanet()
+    {
         UpdateAxisMeasures();
 
         // Calculate the center
         _rotationTarget.transform.localPosition = new Vector3(
                 -widthCenter,
                 -heightCenter,
-                -depthCenter
+                -depthCenter + depth * 0.5f
                 );
 
-        // Calculate the next block center
-        var relPos = new Vector3(widthCenter, heightCenter, depthCenter - 0.5f - depth * 0.5f);
-        _nextBlockCenter.transform.position = _rotationTarget.transform.position + relPos;
+        _nextBlockCenter.transform.position = _zeroRef.transform.position + new Vector3(0, 0, -0.5f);
     }
 
     public Bounds GetPlanetBounds()
@@ -239,6 +244,7 @@ public class PlanetController : MonoBehaviour
         var targetPosition = _nextBlockCenter.transform.localPosition;
 
         block.GetComponent<BlockController>()._targetPosition = targetPosition;
+        RepositionPlanet();
     }
 
     private bool IsNegative(Axis axis)

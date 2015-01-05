@@ -128,19 +128,27 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Push planet back to surface at z=0
 
-## Hour ...
+## Hour 7
 
-### 5:51
+### 5:51-6:40
 
-- Zoom camera out as planet grows
+- Wait: Zoom camera out as planet grows
+
+### 6:41-6:52
+
+- Align falling block rotation
+
+
 
 ## TODO
 
 ## Implement Fun Toy 
 
-- Align falling block rotation
 - Move camera back as planet grows
 
+- Align falling block rotation
+- Make blocks fall with gravity?
+ 
 
 - Create Main Scene
 - Add Game State

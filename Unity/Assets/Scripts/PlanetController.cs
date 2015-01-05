@@ -107,6 +107,8 @@ public class PlanetController : MonoBehaviour
                 distance = Mathf.Min(distance, maxFallDistance);
 
                 b.transform.localPosition += diff.normalized * distance;
+                b.transform.localRotation =
+                    Quaternion.Slerp(b.transform.localRotation, b._targetRotation, Time.deltaTime / timeToRotate);
             }
         }
 
@@ -215,7 +217,7 @@ public class PlanetController : MonoBehaviour
         {
             var bounds = new Bounds(b.localPosition, new Vector3(1, 1, 1));
             bBounds.Add(bounds);
-            Debug.Log("Block Bounds:" + bounds + " min: " + bounds.min + "max: " + bounds.max);
+            //Debug.Log("Block Bounds:" + bounds + " min: " + bounds.min + "max: " + bounds.max);
         }
 
         // Add target bounds for falling blocks
@@ -223,7 +225,7 @@ public class PlanetController : MonoBehaviour
         {
             var bounds = new Bounds(b.GetComponent<BlockController>()._targetPosition, new Vector3(1, 1, 1));
             bBounds.Add(bounds);
-            Debug.Log("Target Block Bounds:" + bounds + " min: " + bounds.min + "max: " + bounds.max);
+            //Debug.Log("Target Block Bounds:" + bounds + " min: " + bounds.min + "max: " + bounds.max);
         }
 
         var minX = bBounds.Min(b => b.min.x);
@@ -242,9 +244,27 @@ public class PlanetController : MonoBehaviour
     {
         block.transform.parent = _blocksFalling.transform;
         var targetPosition = _nextBlockCenter.transform.localPosition;
+        var targetRotation = block.transform.localRotation;
+
+        targetRotation = RoundToSquareAngle(targetRotation);
 
         block.GetComponent<BlockController>()._targetPosition = targetPosition;
+        block.GetComponent<BlockController>()._targetRotation = targetRotation;
+
         RepositionPlanet();
+    }
+
+    private Quaternion RoundToSquareAngle(Quaternion targetRotation)
+    {
+        return Quaternion.Euler(
+            RoundTo90(targetRotation.eulerAngles.x),
+            RoundTo90(targetRotation.eulerAngles.y),
+            RoundTo90(targetRotation.eulerAngles.z));
+    }
+
+    private float RoundTo90(float angle)
+    {
+        return Mathf.RoundToInt(angle / 90) * 90;
     }
 
     private bool IsNegative(Axis axis)

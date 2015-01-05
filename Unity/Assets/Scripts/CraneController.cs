@@ -6,7 +6,7 @@ public class CraneController : MonoBehaviour
     public static CraneController Instance;
 
     private GameObject _blockProto;
-    private GameObject _attachedBlock;
+    public GameObject _attachedBlock;
     private PlanetController _planet;
 
     private float? timeToCreateBlock;

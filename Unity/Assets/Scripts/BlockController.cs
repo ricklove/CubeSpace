@@ -4,6 +4,7 @@ using System.Collections;
 public class BlockController : MonoBehaviour
 {
     public Vector3 _targetPosition;
+    public Quaternion _targetRotation;
 
     private GameObject _frontBack;
     private GameObject _leftRight;

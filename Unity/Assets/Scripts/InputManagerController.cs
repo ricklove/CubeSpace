@@ -88,11 +88,31 @@ public class InputManagerController : MonoBehaviour
             result = _swipeHelper.EndInput(mPos);
         }
 
+        if (result.isSwipe)
+        {
+            _swipeHelper.EndInput(mPos);
+
+            var dir = result.swipeDirection;
+            var planet = FindPlanet();
+
+            if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
+            {
+                if (dir.x > 0) { planet.Rotate(RotationDirection.Left); }
+                else { planet.Rotate(RotationDirection.Right); }
+            }
+            else
+            {
+                if (dir.y > 0) { planet.Rotate(RotationDirection.Down); }
+                else { planet.Rotate(RotationDirection.Up); }
+            }
+
+        }
+
         Debug.Log("mPos:" + mPos);
         Debug.Log("result:" + result);
 
         // Drop Block on enter
-        if (Input.GetButtonDown("Fire1") && !Input.GetMouseButtonDown(0))
+        if (Input.GetButtonDown("Fire1") )//&& !Input.GetMouseButtonDown(0))
         {
             var crane = FindCrane();
 
@@ -120,6 +140,8 @@ public class SwipeHelper
     public float maxAngleTolerance = 30;
     public float minContinueDistance = 0.01f;
 
+    public bool shouldShowDebug = true;
+
     private float _startTime;
     private Vector2 _startPosition;
     private float _minAngle;
@@ -139,14 +161,25 @@ public class SwipeHelper
 
         if (timeDiff > maxSwipeTime)
         {
+            if (shouldShowDebug)
+            {
+                Debug.Log("SwipeHelper.AddConstantInput: Timeout: timeDiff=" + timeDiff);
+            }
+
             return EndInput(position);
         }
 
         // Motionless
         var diff = position - _lastPosition;
+        _lastPosition = position;
 
         if (diff.sqrMagnitude < minContinueDistance * minContinueDistance)
         {
+            if (shouldShowDebug)
+            {
+                Debug.Log("SwipeHelper.AddConstantInput: Motionless: diff=" + diff);
+            }
+
             return EndInput(position);
         }
 
@@ -159,6 +192,13 @@ public class SwipeHelper
     {
         _startTime = Time.time;
         _startPosition = position;
+        _minAngle = 360;
+        _maxAngle = 0;
+
+        if (shouldShowDebug)
+        {
+            Debug.Log("SwipeHelper.Start: _startTime=" + _startTime + " _startPosition" + _startPosition);
+        }
     }
 
     public void ContinueInput(Vector2 position)
@@ -170,10 +210,19 @@ public class SwipeHelper
 
         // Calculate Angle
         var diff = position - _startPosition;
-        var angle = Vector2.Angle(Vector2.right, diff);
 
-        _minAngle = Mathf.Min(angle, _minAngle);
-        _maxAngle = Mathf.Max(angle, _maxAngle);
+        if (diff.sqrMagnitude > 0.001f)
+        {
+            var angle = Vector2.Angle(Vector2.right, diff);
+
+            _minAngle = Mathf.Min(angle, _minAngle);
+            _maxAngle = Mathf.Max(angle, _maxAngle);
+
+            if (shouldShowDebug)
+            {
+                Debug.Log("SwipeHelper.Continue: _minAngle=" + _minAngle + " _maxAngle" + _maxAngle);
+            }
+        }
     }
 
     public SwipeResult EndInput(Vector2 position)
@@ -183,6 +232,11 @@ public class SwipeHelper
         var result = DetectSwipe(position);
 
         _startTime = 0;
+
+        if (shouldShowDebug)
+        {
+            Debug.Log("SwipeHelper.End: result=" + result);
+        }
 
         return result;
     }

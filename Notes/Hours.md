@@ -166,6 +166,17 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Add swipe logic
 
+## Hour 10
+
+### 7:05-7:26
+
+- Handle swipe logic
+
+### 7:27
+
+- Test on device
+
+
 ## TODO
 
 ## Implement Fun Toy 

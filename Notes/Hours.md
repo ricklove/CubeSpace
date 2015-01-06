@@ -153,17 +153,22 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Set colors for blocks
 
+### 6:06-6:08
+
+- Make sure block does not come to far in front
+
+### 6:09-6:10
+
+- Create main scene
+- Fix start position
+
+### 6:11-7:04
+
+- Add swipe logic
 
 ## TODO
 
 ## Implement Fun Toy 
-
-- Make sure block does not come to far in front
-
-- Create Main Scene
-- Add Game State
-
-- Game Over Option (10x10x10)
 
 - Add touch/mouse controls
 	- Tap/Click (In Side Regions)
@@ -172,6 +177,8 @@ Use cutting edge motion tracking technology to control the game with your device
 - Add motion tracking inputs
 	- Swipe to rotate
 	- Grow (hand towards cam) to place
+
+- ?Game Over Option (10x10x10)
 
 ## Make It Shine
 

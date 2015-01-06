@@ -733,7 +733,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeToRotate: .25
-  timeToPosition: .5
+  timeToPosition: .25
   timeToFall: .100000001
   widthAxis: 0
   heightAxis: 0

@@ -6,6 +6,8 @@ public class GameLogicController : MonoBehaviour
     private GameTimerController _gameTimer;
     private GameState _gameState;
 
+    private int _blockCount = 1;
+
     void Start()
     {
         _gameTimer = FindObjectOfType<GameTimerController>();
@@ -22,7 +24,22 @@ public class GameLogicController : MonoBehaviour
 
     void Crane_BlockDropped()
     {
+        _blockCount++;
         _gameTimer.AddTime(3);
+        CraneController.Instance.nextBlockColor = GetNextColor();
+    }
+
+    private Color GetNextColor()
+    {
+        var alpha = 1f;
+
+        switch (_blockCount % 3)
+        {
+            case 0: return Color.red;
+            case 1: return Color.green;
+            case 2: //return Color.blue;
+            default: return Color.blue;
+        }
     }
 
     void Update()
@@ -64,7 +81,11 @@ public class GameLogicController : MonoBehaviour
 
     private void UpdateSetup()
     {
+        _blockCount = 1;
+
         PlanetController.Instance.Reset();
+        CraneController.Instance.nextBlockColor = GetNextColor();
+
         CraneController.Instance.Reset();
         _gameTimer.ResetTimer(60);
         _gameTimer.StartTimer();

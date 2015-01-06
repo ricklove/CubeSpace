@@ -3459,6 +3459,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f923c6e48bd00b4a8e44994cd0743f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nextBlockColor: {r: 0, g: 0, b: 0, a: 0}
   shouldDropOnlyWhenCorrect: 1
   _attachedBlock: {fileID: 0}
 --- !u!1 &1947455374

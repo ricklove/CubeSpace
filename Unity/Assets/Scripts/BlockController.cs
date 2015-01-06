@@ -14,12 +14,18 @@ public class BlockController : MonoBehaviour
     private float _lastHeight;
     private float _lastDepth;
 
-    void Start()
+    private Shader _diffuse;
+    private Shader _transDiffuse;
+
+    void Awake()
     {
         var position = transform.Find("Position").gameObject;
         _frontBack = position.transform.Find("FrontBack").gameObject;
         _leftRight = position.transform.Find("LeftRight").gameObject;
         _topBottom = position.transform.Find("TopBottom").gameObject;
+
+        _diffuse = Shader.Find("Diffuse");
+        _transDiffuse = Shader.Find("Transparent/Diffuse");
     }
 
     void Update()
@@ -41,5 +47,25 @@ public class BlockController : MonoBehaviour
         _lastWidth = width;
         _lastHeight = height;
         _lastDepth = depth;
+    }
+
+    public void SetColor(Color color)
+    {
+        if (color.a < 1)
+        {
+            _frontBack.renderer.material.shader = _transDiffuse;
+            _leftRight.renderer.material.shader = _transDiffuse;
+            _topBottom.renderer.material.shader = _transDiffuse;
+        }
+        else
+        {
+            _frontBack.renderer.material.shader = _diffuse;
+            _leftRight.renderer.material.shader = _diffuse;
+            _topBottom.renderer.material.shader = _diffuse;
+        }
+
+        _frontBack.renderer.material.color = color;
+        _leftRight.renderer.material.color = color;
+        _topBottom.renderer.material.color = color;
     }
 }

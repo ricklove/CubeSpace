@@ -7,7 +7,8 @@ public class CraneController : MonoBehaviour
     public delegate void CraneAction();
     public event CraneAction BlockDropped;
     public event CraneAction BlockDropFailed;
-    
+
+    public Color nextBlockColor;
     public bool shouldDropOnlyWhenCorrect = true;
 
     private GameObject _blockProto;
@@ -84,6 +85,8 @@ public class CraneController : MonoBehaviour
             }
         }
 
+        _attachedBlock.GetComponent<BlockController>().SetColor(GetDropColor(nextBlockColor));
+
         _planet.AddBlockToPlanet(_attachedBlock);
 
         if (BlockDropped != null)
@@ -132,6 +135,20 @@ public class CraneController : MonoBehaviour
         block.transform.localPosition = new Vector3(0, 0, 0);
         block.SetActive(true);
 
+        block.GetComponent<BlockController>().SetColor(GetCraneColor(nextBlockColor));
+
         return block;
     }
+
+    private Color GetCraneColor(Color color)
+    {
+        return new Color(color.r, color.g, color.b, 0.25f);
+    }
+
+    private Color GetDropColor(Color color)
+    {
+        return new Color(color.r, color.g, color.b, 1.0f);
+    }
+
+
 }

@@ -147,16 +147,23 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Show time change
 
+## Hour 9
+
+### 2015-01-06 5:40-6:05
+
+- Set colors for blocks
+
 
 ## TODO
 
 ## Implement Fun Toy 
 
-- Only allow correct positioning option
+- Make sure block does not come to far in front
 
 - Create Main Scene
 - Add Game State
-- Game Over at 10x10x10
+
+- Game Over Option (10x10x10)
 
 - Add touch/mouse controls
 	- Tap/Click (In Side Regions)
@@ -168,7 +175,6 @@ Use cutting edge motion tracking technology to control the game with your device
 
 ## Make It Shine
 
-- Add timer to game
 - Change color of each block as time passes
 - Display dimensions of each block
 

@@ -172,10 +172,19 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Handle swipe logic
 
-### 7:27-
+### 7:27-8:03
 
 - Test on device
 	- BUG: Beginning of swipe is a click
+- Fixed: Tap works independently from swipe
+
+### 8:04-8:12
+
+- Test on device
+	- BUG: Tap not working at all
+- Fix
+- Test again
+	- Still not working
 
 ## TODO
 

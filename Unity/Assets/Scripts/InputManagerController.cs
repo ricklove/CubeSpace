@@ -76,7 +76,7 @@ public class InputManagerController : MonoBehaviour
 
         // Detect swipe
         var mPos = SwipeHelper.ToScreenRatio(Input.mousePosition, new Vector2(Screen.width, Screen.height));
-        var result = _swipeHelper.AddConstantInput(mPos, Input.GetMouseButton(0));
+        var result = _swipeHelper.AddConstantInput(mPos, Input.GetMouseButton(0) || Input.touchCount > 0);
 
         if (result.isClick)
         {

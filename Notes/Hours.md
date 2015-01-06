@@ -172,10 +172,10 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Handle swipe logic
 
-### 7:27
+### 7:27-
 
 - Test on device
-
+	- BUG: Beginning of swipe is a click
 
 ## TODO
 
@@ -183,14 +183,10 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Add touch/mouse controls
 	- Tap/Click (In Side Regions)
-	- Drag/Swipe
-	- Tap/Click (In Center Region)
 - Add motion tracking inputs
 	- Swipe to rotate
 	- Grow (hand towards cam) to place
-
-- ?Game Over Option (10x10x10)
-
+	- 
 ## Make It Shine
 
 - Change color of each block as time passes
@@ -213,3 +209,8 @@ Use cutting edge motion tracking technology to control the game with your device
 - Announce on Twitter/Facebook
 - Announce on Unity forums
 - Announce on Reddit
+
+
+
+## Ideas
+- ?Game Over Alternative (10x10x10)

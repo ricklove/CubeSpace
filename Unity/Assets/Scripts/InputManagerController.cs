@@ -76,7 +76,14 @@ public class InputManagerController : MonoBehaviour
 
         // Detect swipe
         var mPos = SwipeHelper.ToScreenRatio(Input.mousePosition, new Vector2(Screen.width, Screen.height));
-        var result = _swipeHelper.AddConstantInput(mPos);
+        var result = _swipeHelper.AddConstantInput(mPos, Input.GetMouseButton(0));
+
+        if (result.isClick)
+        {
+            var crane = FindCrane();
+            crane.DropBlock();
+            return;
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -107,20 +114,18 @@ public class InputManagerController : MonoBehaviour
             }
 
         }
-
-        Debug.Log("mPos:" + mPos);
-        Debug.Log("result:" + result);
-
-        // Drop Block on enter
-        if (Input.GetButtonDown("Fire1") )//&& !Input.GetMouseButtonDown(0))
+        else
         {
-            var crane = FindCrane();
+            // Drop Block on enter
+            if (Input.GetButtonDown("Fire1") && !Input.GetMouseButtonDown(0))
+            {
+                var crane = FindCrane();
 
-            crane.DropBlock();
+                crane.DropBlock();
+            }
+
+            // TODO: Add click with position inputs
         }
-
-        // TODO: Add click with position inputs
-
     }
 
 
@@ -138,7 +143,7 @@ public class SwipeHelper
     public float minSwipeDistance = 0.25f;
     public float maxSwipeTime = 2f;
     public float maxAngleTolerance = 30;
-    public float minContinueDistance = 0.01f;
+    public float minContinueDistance = 0.001f;
 
     public bool shouldShowDebug = true;
 
@@ -148,9 +153,63 @@ public class SwipeHelper
     private float _maxAngle;
 
     private Vector2 _lastPosition;
+    private bool _wasDown = false;
+    private Vector2 _downStartPosition;
 
-    public SwipeResult AddConstantInput(Vector2 position)
+
+    public SwipeResult AddConstantInput(Vector2 position, bool isDown)
     {
+        if (shouldShowDebug)
+        {
+            Debug.Log("SwipeHelper.AddConstantInput ------- ");
+        }
+
+
+        var downChange = DownChange.None;
+
+        if (!_wasDown && isDown) { downChange = DownChange.WentDown; }
+        else if (_wasDown && !isDown) { downChange = DownChange.WentUp; }
+        _wasDown = isDown;
+
+        if (downChange == DownChange.WentDown)
+        {
+            if (shouldShowDebug)
+            {
+                Debug.Log("SwipeHelper.AddConstantInput: Mouse Down");
+            }
+
+            StartInput(position);
+
+            _downStartPosition = _startPosition;
+
+            return SwipeResult.none;
+        }
+        else if (downChange == DownChange.WentUp)
+        {
+            if (shouldShowDebug)
+            {
+                Debug.Log("SwipeHelper.AddConstantInput: Mouse Up");
+            }
+
+            var diffStart = position - _downStartPosition;
+
+            if (diffStart.sqrMagnitude < minContinueDistance * minContinueDistance)
+            {
+                if (shouldShowDebug)
+                {
+                    Debug.Log("SwipeHelper.AddConstantInput: Mouse Click");
+                }
+
+                return new SwipeResult() { isClick = true };
+            }
+            else
+            {
+                return EndInput(position);
+            }
+        }
+
+
+
         if (_startTime == 0)
         {
             StartInput(position);
@@ -185,7 +244,15 @@ public class SwipeHelper
 
         // If continuing
         ContinueInput(position);
-        return DetectSwipe(position);
+        var result = DetectSwipe(position);
+
+        // If cannot be swipe, end
+        if (!result.isSwipe && !result.couldBeSwipe)
+        {
+            return EndInput(position);
+        }
+
+        return result;
     }
 
     public void StartInput(Vector2 position)
@@ -246,16 +313,16 @@ public class SwipeHelper
         var diff = position - _startPosition;
         var timeDiff = Time.time - _startTime;
 
-        if (diff.sqrMagnitude > minSwipeDistance * minSwipeDistance
-            && timeDiff < maxSwipeTime)
+        if ((360 + _maxAngle - _minAngle) % 360 < maxAngleTolerance)
         {
-            if ((360 + _maxAngle - _minAngle) % 360 < maxAngleTolerance)
+            if (diff.sqrMagnitude > minSwipeDistance * minSwipeDistance
+                && timeDiff < maxSwipeTime)
             {
                 return new SwipeResult() { isSwipe = true, swipeDirection = position - _startPosition };
             }
             else
             {
-                return SwipeResult.none;
+                return new SwipeResult() { isSwipe = false, couldBeSwipe = true };
             }
         }
 
@@ -265,9 +332,11 @@ public class SwipeHelper
 
 public struct SwipeResult
 {
-    public static SwipeResult none = new SwipeResult() { isSwipe = false };
+    public static SwipeResult none = new SwipeResult() { isSwipe = false, couldBeSwipe = false };
 
+    public bool isClick;
     public bool isSwipe;
+    public bool couldBeSwipe;
     public Vector2 swipeDirection;
 
     public override string ToString()
@@ -276,4 +345,11 @@ public struct SwipeResult
         else { return "SwipeDirection=" + swipeDirection; }
 
     }
+}
+
+public enum DownChange
+{
+    None,
+    WentUp,
+    WentDown
 }

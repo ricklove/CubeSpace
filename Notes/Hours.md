@@ -186,6 +186,12 @@ Use cutting edge motion tracking technology to control the game with your device
 - Test again
 	- Still not working
 
+### 8:13-8:17
+
+- Increase Tap Distance
+- Test again
+	- Working!
+
 ## TODO
 
 ## Implement Fun Toy 

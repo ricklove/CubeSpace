@@ -144,6 +144,7 @@ public class SwipeHelper
     public float maxSwipeTime = 2f;
     public float maxAngleTolerance = 30;
     public float minContinueDistance = 0.001f;
+    public float maxClickDistance = 0.05f;
 
     public bool shouldShowDebug = true;
 
@@ -193,7 +194,7 @@ public class SwipeHelper
 
             var diffStart = position - _downStartPosition;
 
-            if (diffStart.sqrMagnitude < minContinueDistance * minContinueDistance)
+            if (diffStart.sqrMagnitude < maxClickDistance * maxClickDistance)
             {
                 if (shouldShowDebug)
                 {

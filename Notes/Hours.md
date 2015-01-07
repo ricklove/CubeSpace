@@ -198,11 +198,19 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Add Directional Light
 
+### 6:17-7:45
+
+- Show biggest cube
+
 
 
 ## TODO
 
 ## Implement Fun Toy 
+
+- Fix bugs:
+	- Improve touch sensitivity
+	- Fix game start
 
 - Add touch/mouse controls
 	- Tap/Click (In Side Regions)

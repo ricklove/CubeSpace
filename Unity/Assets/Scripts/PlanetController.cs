@@ -30,9 +30,13 @@ public class PlanetController : MonoBehaviour
     private GameObject _zAxis;
     private GameObject _nextBlockCenter;
     private GameObject _zeroRef;
+    private GameObject _core;
+    private GameObject _biggestCube;
 
     private GameObject _blocks;
     private GameObject _blocksFalling;
+
+    private int _lastCubeLength;
 
     void Awake()
     {
@@ -53,6 +57,9 @@ public class PlanetController : MonoBehaviour
         _nextBlockCenter = _rotationTarget.transform.Find("NextBlockCenter").gameObject;
 
         _zeroRef = transform.Find("ZeroRef").gameObject;
+
+        _core = _rotation.transform.Find("Core").gameObject;
+        _biggestCube = _rotation.transform.Find("BiggestCube").gameObject;
 
         RepositionPlanet();
     }
@@ -87,6 +94,44 @@ public class PlanetController : MonoBehaviour
 
         // Move falling blocks
         UpdateFallingBlocks();
+
+        // Show biggest Cube
+        UpdateBiggestCube();
+    }
+
+    private void UpdateBiggestCube()
+    {
+        var cubeLength = Mathf.Min(width, height, depth);
+
+        if (cubeLength == _lastCubeLength)
+        {
+            return;
+        }
+
+        _lastCubeLength = cubeLength;
+
+        _biggestCube.transform.localScale = new Vector3(cubeLength * 1.05f, cubeLength * 1.05f, cubeLength * 1.05f);
+        var cubeSize = new Vector3(cubeLength,cubeLength,cubeLength);
+
+        var bounds = GetPlanetBounds();
+        var size = bounds.max - bounds.min;
+
+        var centerAtMaxSide = new Vector3(
+                bounds.center.x + (size.x - cubeLength) * 0.5f,
+                bounds.center.y + (size.y - cubeLength) * 0.5f,
+                bounds.center.z + (size.z - cubeLength) * 0.5f)
+            ;
+
+        var minCorner = centerAtMaxSide - cubeSize * 0.5f;
+        var adjustedMinCorner = new Vector3(
+            Mathf.Min(-0.5f, minCorner.x),
+            Mathf.Min(-0.5f, minCorner.y),
+            Mathf.Min(-0.5f, minCorner.z)
+            );
+
+        var center = adjustedMinCorner + cubeSize * 0.5f;
+
+        _biggestCube.transform.localPosition = center;
     }
 
     public void Reset()

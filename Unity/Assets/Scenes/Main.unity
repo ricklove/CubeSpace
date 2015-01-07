@@ -1509,6 +1509,18 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: f77fa0b102895654ab204155ea15a5ab, type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ab9910fcd91adc5469189c06c5a56b4a, type: 2}
+    - target: {fileID: 100004, guid: f77fa0b102895654ab204155ea15a5ab, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: f77fa0b102895654ab204155ea15a5ab, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f77fa0b102895654ab204155ea15a5ab, type: 2}
   m_RootGameObject: {fileID: 1615370945}
@@ -2179,7 +2191,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1941451267}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -3}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1615370946}
@@ -2196,7 +2208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f923c6e48bd00b4a8e44994cd0743f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  craneBlockAlpha: .150000006
+  craneBlockAlpha: .25
   nextBlockColor: {r: 0, g: 0, b: 0, a: 0}
   shouldDropOnlyWhenCorrect: 1
   _attachedBlock: {fileID: 0}

@@ -140,7 +140,7 @@ public class SwipeHelper
         return new Vector2(position.x / screenSize.x, position.y / screenSize.y);
     }
 
-    public float minSwipeDistance = 0.25f;
+    public float minSwipeDistance = 0.1f;
     public float maxSwipeTime = 2f;
     public float maxAngleTolerance = 30;
     public float minContinueDistance = 0.001f;

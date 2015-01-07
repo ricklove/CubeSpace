@@ -38,6 +38,8 @@ public class PlanetController : MonoBehaviour
 
     private int _lastCubeLength;
 
+    private float _timeAtStartMove = -1;
+
     void Awake()
     {
         if (Instance != null) { throw new UnityException("Only One Planet can be created per scene"); }
@@ -78,16 +80,20 @@ public class PlanetController : MonoBehaviour
 
         if (diff.sqrMagnitude > 0)
         {
-            var distance = diff.magnitude;
-            var maxDistance = Time.deltaTime / timeToPosition;
-
-            if (distance > maxDistance)
+            if (_timeAtStartMove == -1)
             {
-                distance = maxDistance;
+                _timeAtStartMove = Time.time;
             }
+
+            var timeRemaining = Mathf.Max(0.001f, timeToPosition - (Time.time - _timeAtStartMove));
+            var timePart = Time.deltaTime / timeRemaining;
+            timePart = Mathf.Min(1, timePart);
+
+            var distance = timePart * diff.magnitude;
 
             _rotation.transform.localPosition += diff.normalized * distance;
         }
+        else { _timeAtStartMove = -1; }
 
         // Update axis measures
         UpdateAxisMeasures();
@@ -111,7 +117,7 @@ public class PlanetController : MonoBehaviour
         _lastCubeLength = cubeLength;
 
         _biggestCube.transform.localScale = new Vector3(cubeLength * 1.05f, cubeLength * 1.05f, cubeLength * 1.05f);
-        var cubeSize = new Vector3(cubeLength,cubeLength,cubeLength);
+        var cubeSize = new Vector3(cubeLength, cubeLength, cubeLength);
 
         var bounds = GetPlanetBounds();
         var size = bounds.max - bounds.min;
@@ -146,8 +152,11 @@ public class PlanetController : MonoBehaviour
             Destroy(b.gameObject);
         }
 
+        _blocks.transform.DetachChildren();
+        _blocksFalling.transform.DetachChildren();
+
         RepositionPlanet();
-        Rotate(RotationDirection.Up);
+        //Rotate(RotationDirection.Up);
     }
 
     private void UpdateFallingBlocks()

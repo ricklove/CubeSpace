@@ -210,8 +210,13 @@ Use cutting edge motion tracking technology to control the game with your device
 
 ### 7:55-8:30
 
-- 
+- Add high score
 
+### 8:31-
+
+- Fix move to position 
+
+## Hour 13
 
 
 ## TODO

@@ -192,6 +192,14 @@ Use cutting edge motion tracking technology to control the game with your device
 - Test again
 	- Working!
 
+## Hour 11
+
+### 2015-01-07 6:14-6:16
+
+- Add Directional Light
+
+
+
 ## TODO
 
 ## Implement Fun Toy 

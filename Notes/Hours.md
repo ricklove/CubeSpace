@@ -202,6 +202,16 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Show biggest cube
 
+## Hour 12
+
+### 7:46-7:54
+
+- Change color with biggest cube
+
+### 7:55-8:30
+
+- 
+
 
 
 ## TODO

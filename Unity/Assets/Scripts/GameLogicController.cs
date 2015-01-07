@@ -1,12 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GameLogicController : MonoBehaviour
 {
     private GameTimerController _gameTimer;
     private GameState _gameState;
 
+    private Text _cubeCount;
+    private Text _cubeLength;
+    private Text _highestCubeCount;
+
     private int _blockCount = 1;
+    private int _lastCubeLength = -1;
+
+    void Awake()
+    {
+        var score = transform.FindChild("Score");
+        _cubeCount = score.FindChild("CubeCount").GetComponent<Text>();
+        _cubeLength = score.FindChild("CubeLength").GetComponent<Text>();
+        _highestCubeCount = score.FindChild("HighestCubeCount").GetComponent<Text>();
+    }
 
     void Start()
     {
@@ -27,18 +41,69 @@ public class GameLogicController : MonoBehaviour
         _blockCount++;
         _gameTimer.AddTime(3);
         CraneController.Instance.nextBlockColor = GetNextColor();
+
+        ShowCubeScore();
+    }
+
+    public int HighestCubeCount
+    {
+        get
+        {
+            if (!PlayerPrefs.HasKey("HighestCubeCount")) { return 0; }
+
+            return PlayerPrefs.GetInt("HighestCubeCount");
+        }
+        set { PlayerPrefs.SetInt("HighestCubeCount", value); }
+    }
+
+    private void ShowCubeScore()
+    {
+        // Update cube size
+
+        var cubeLength = Mathf.Min(PlanetController.Instance.width, PlanetController.Instance.height, PlanetController.Instance.depth);
+
+        cubeLength = Mathf.Max(1, cubeLength);
+
+        if (_lastCubeLength != cubeLength)
+        {
+            var cubeCount = cubeLength * cubeLength * cubeLength;
+            _cubeLength.text = "" + cubeLength + "*" + cubeLength + "*" + cubeLength;
+            _cubeCount.text = "" + cubeCount;
+
+            _cubeLength.color = GetNextColor();
+            _cubeCount.color = GetNextColor();
+
+            HighestCubeCount = Mathf.Max(HighestCubeCount, cubeCount);
+            _highestCubeCount.text = "High Score: " + HighestCubeCount;
+        }
+        else
+        {
+            //_cubeLength.color = Color.white;
+            //_cubeCount.color = Color.white;
+        }
     }
 
     private Color GetNextColor()
     {
-        var alpha = 1f;
+        //switch (_blockCount % 3)
+        //{
+        //    case 0: return Color.red;
+        //    case 1: return Color.green;
+        //    case 2: return Color.blue;
+        //   default: return Color.white; // Not possible
+        //}
 
-        switch (_blockCount % 3)
+        var cubeLength = Mathf.Min(PlanetController.Instance.width, PlanetController.Instance.height, PlanetController.Instance.depth);
+
+        switch ((cubeLength - 1) % 6)
         {
             case 0: return Color.red;
             case 1: return Color.green;
-            case 2: //return Color.blue;
-            default: return Color.blue;
+            case 2: return Color.blue;
+            case 3: return Color.yellow;
+            case 4: return Color.magenta;
+            case 5: return Color.cyan;
+            default: return Color.white; // Not possible
         }
     }
 
@@ -90,6 +155,8 @@ public class GameLogicController : MonoBehaviour
         _gameTimer.ResetTimer(60);
         _gameTimer.StartTimer();
         _gameState = GameState.Play;
+
+        ShowCubeScore();
     }
 
     private void UpdatePlay()

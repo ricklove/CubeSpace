@@ -8,6 +8,7 @@ public class CraneController : MonoBehaviour
     public event CraneAction BlockDropped;
     public event CraneAction BlockDropFailed;
 
+    public float craneBlockAlpha = 0.25f;
     public Color nextBlockColor;
     public bool shouldDropOnlyWhenCorrect = true;
 
@@ -142,7 +143,7 @@ public class CraneController : MonoBehaviour
 
     private Color GetCraneColor(Color color)
     {
-        return new Color(color.r, color.g, color.b, 0.25f);
+        return new Color(color.r, color.g, color.b, craneBlockAlpha);
     }
 
     private Color GetDropColor(Color color)

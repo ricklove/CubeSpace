@@ -6,9 +6,13 @@ public class BlockController : MonoBehaviour
     public Vector3 _targetPosition;
     public Quaternion _targetRotation;
 
-    private GameObject _frontBack;
-    private GameObject _leftRight;
-    private GameObject _topBottom;
+    private GameObject _front;
+    private GameObject _back;
+    private GameObject _left;
+    private GameObject _right;
+    private GameObject _top;
+    private GameObject _bottom;
+
 
     private float _lastWidth;
     private float _lastHeight;
@@ -20,9 +24,12 @@ public class BlockController : MonoBehaviour
     void Awake()
     {
         var position = transform.Find("Position").gameObject;
-        _frontBack = position.transform.Find("FrontBack").gameObject;
-        _leftRight = position.transform.Find("LeftRight").gameObject;
-        _topBottom = position.transform.Find("TopBottom").gameObject;
+        _front = position.transform.Find("Front").gameObject;
+        _back = position.transform.Find("Back").gameObject;
+        _left = position.transform.Find("Left").gameObject;
+        _right = position.transform.Find("Right").gameObject;
+        _top = position.transform.Find("Top").gameObject;
+        _bottom = position.transform.Find("Bottom").gameObject;
 
         _diffuse = Shader.Find("Diffuse");
         _transDiffuse = Shader.Find("Transparent/Diffuse");
@@ -39,9 +46,13 @@ public class BlockController : MonoBehaviour
             || height != _lastHeight
             || depth != _lastDepth)
         {
-            _frontBack.renderer.material.mainTextureScale = new Vector2(width, height);
-            _leftRight.renderer.material.mainTextureScale = new Vector2(depth, height);
-            _topBottom.renderer.material.mainTextureScale = new Vector2(width, depth);
+            _front.renderer.material.mainTextureScale = new Vector2(width, height);
+            _left.renderer.material.mainTextureScale = new Vector2(height, depth);
+            _top.renderer.material.mainTextureScale = new Vector2(width, depth);
+
+            _back.renderer.material.mainTextureScale = new Vector2(width, height);
+            _right.renderer.material.mainTextureScale = new Vector2(height, depth);
+            _bottom.renderer.material.mainTextureScale = new Vector2(width, depth);
         }
 
         _lastWidth = width;
@@ -53,19 +64,28 @@ public class BlockController : MonoBehaviour
     {
         if (color.a < 1)
         {
-            _frontBack.renderer.material.shader = _transDiffuse;
-            _leftRight.renderer.material.shader = _transDiffuse;
-            _topBottom.renderer.material.shader = _transDiffuse;
+            _front.renderer.material.shader = _transDiffuse;
+            _back.renderer.material.shader = _transDiffuse;
+            _left.renderer.material.shader = _transDiffuse;
+            _right.renderer.material.shader = _transDiffuse;
+            _top.renderer.material.shader = _transDiffuse;
+            _bottom.renderer.material.shader = _transDiffuse;
         }
         else
         {
-            _frontBack.renderer.material.shader = _diffuse;
-            _leftRight.renderer.material.shader = _diffuse;
-            _topBottom.renderer.material.shader = _diffuse;
+            _front.renderer.material.shader = _diffuse;
+            _back.renderer.material.shader = _diffuse;
+            _left.renderer.material.shader = _diffuse;
+            _right.renderer.material.shader = _diffuse;
+            _top.renderer.material.shader = _diffuse;
+            _bottom.renderer.material.shader = _diffuse;
         }
 
-        _frontBack.renderer.material.color = color;
-        _leftRight.renderer.material.color = color;
-        _topBottom.renderer.material.color = color;
+        _front.renderer.material.color = color;
+        _back.renderer.material.color = color;
+        _left.renderer.material.color = color;
+        _right.renderer.material.color = color;
+        _top.renderer.material.color = color;
+        _bottom.renderer.material.color = color;
     }
 }

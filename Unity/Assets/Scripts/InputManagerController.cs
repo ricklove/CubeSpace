@@ -253,7 +253,9 @@ public class SwipeHelper
             return EndInput(position);
         }
 
-        return result;
+        // Don't send swipe
+        return new SwipeResult() { couldBeSwipe = true };
+        //return result;
     }
 
     public void StartInput(Vector2 position)

@@ -12,7 +12,7 @@ public class GameLogicController : MonoBehaviour
     private Text _highestCubeCount;
 
     private int _blockCount = 1;
-    private int _lastCubeLength = -1;
+    private int _lastScore = -1;
 
     void Awake()
     {
@@ -45,36 +45,46 @@ public class GameLogicController : MonoBehaviour
         ShowCubeScore();
     }
 
-    public int HighestCubeCount
+    public int HighestScore
     {
         get
         {
-            if (!PlayerPrefs.HasKey("HighestCubeCount")) { return 0; }
+            if (!PlayerPrefs.HasKey("HighestScore")) { return 0; }
 
-            return PlayerPrefs.GetInt("HighestCubeCount");
+            return PlayerPrefs.GetInt("HighestScore");
         }
-        set { PlayerPrefs.SetInt("HighestCubeCount", value); }
+        set { PlayerPrefs.SetInt("HighestScore", value); }
     }
 
     private void ShowCubeScore()
     {
         // Update cube size
+        var w = PlanetController.Instance.width;
+        var h = PlanetController.Instance.height;
+        var d = PlanetController.Instance.depth;
 
-        var cubeLength = Mathf.Min(PlanetController.Instance.width, PlanetController.Instance.height, PlanetController.Instance.depth);
-
+        var cubeLength = Mathf.Min(w, h, d);
         cubeLength = Mathf.Max(1, cubeLength);
+        var cubeCount = cubeLength * cubeLength * cubeLength;
 
-        if (_lastCubeLength != cubeLength)
+        var blockCount = w * h * d;
+        var score = blockCount;
+
+        if (_lastScore != score)
         {
-            var cubeCount = cubeLength * cubeLength * cubeLength;
-            _cubeLength.text = "" + cubeLength + "*" + cubeLength + "*" + cubeLength;
-            _cubeCount.text = "" + cubeCount;
+            _lastScore = score;
 
-            _cubeLength.color = GetNextColor();
+            _cubeCount.text = "" + blockCount;
+            _cubeLength.text = "";
+
+            //_cubeCount.text = "" + blockCount + " (" + w + "*" + h + "*" + d + ")";
+            //_cubeLength.text = "Cube: " + cubeCount + " (" + cubeLength + "*" + cubeLength + "*" + cubeLength + ")";
+
             _cubeCount.color = GetNextColor();
+            //            _cubeLength.color = GetNextColor();
 
-            HighestCubeCount = Mathf.Max(HighestCubeCount, cubeCount);
-            _highestCubeCount.text = "High Score: " + HighestCubeCount;
+            HighestScore = Mathf.Max(HighestScore, score);
+            _highestCubeCount.text = "High Score: " + HighestScore;
         }
         else
         {

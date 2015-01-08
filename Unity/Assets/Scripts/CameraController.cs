@@ -6,9 +6,11 @@ public class CameraController : MonoBehaviour
     private PlanetController _planet;
     private CraneController _crane;
 
+    private Vector3 _originalPosition;
+
     void Start()
     {
-
+        _originalPosition = transform.position;
     }
 
     void Update()
@@ -20,7 +22,8 @@ public class CameraController : MonoBehaviour
 
         var maxSize = Mathf.Max(planet.width, planet.height, planet.depth);
 
-        cam.transform.position = new Vector3(0, 0, -5 - maxSize);
+        //cam.transform.position = new Vector3(0, 0, -5 - maxSize);
+        cam.transform.position = new Vector3(_originalPosition.x + maxSize * 0.3f, _originalPosition.y + maxSize * 0.3f, -8 - maxSize * 1.2f);
 
         //// Zoom to world size
         //var planetBottomLeft = new Vector3(-0.5f * planet.width, -0.5f * planet.height, 0);

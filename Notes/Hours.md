@@ -212,20 +212,20 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Add high score
 
-### 8:31-
+## Hour 13
+
+### 8:31-9:30
 
 - Fix move to position 
 
-## Hour 13
+
 
 
 ## TODO
 
 ## Implement Fun Toy 
 
-- Fix bugs:
-	- Improve touch sensitivity
-	- Fix game start
+- Create Title screen
 
 - Add touch/mouse controls
 	- Tap/Click (In Side Regions)

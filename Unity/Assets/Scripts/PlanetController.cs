@@ -39,6 +39,7 @@ public class PlanetController : MonoBehaviour
     private int _lastCubeLength;
 
     private float _timeAtStartMove = -1;
+    private Vector3 _lastTargetPosition;
 
     void Awake()
     {
@@ -80,7 +81,7 @@ public class PlanetController : MonoBehaviour
 
         if (diff.sqrMagnitude > 0)
         {
-            if (_timeAtStartMove == -1)
+            if (_timeAtStartMove == -1 || _lastTargetPosition != _rotationTarget.transform.localPosition)
             {
                 _timeAtStartMove = Time.time;
             }
@@ -94,6 +95,8 @@ public class PlanetController : MonoBehaviour
             _rotation.transform.localPosition += diff.normalized * distance;
         }
         else { _timeAtStartMove = -1; }
+
+        _lastTargetPosition = _rotationTarget.transform.localPosition;
 
         // Update axis measures
         UpdateAxisMeasures();

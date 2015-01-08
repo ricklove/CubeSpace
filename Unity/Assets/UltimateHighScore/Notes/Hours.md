@@ -88,10 +88,16 @@ Multiple score elements
 
 - Finish coins
 
+## Hour 5
+
+### 10:00-11:25
+
+- Fix scaling problem with score message
+
 
 ## TODO
 
-- Show coins
+- Change all world elements to use world coordinates
 
 - Make it FUN!
 - Worry about functionality first 

@@ -11,7 +11,7 @@ public class UltimateHighScoreController : MonoBehaviour
 
     private Canvas _messageCanvas;
     private GameObject _messageProto;
-    private GameObject _messages;
+    //private GameObject _messages;
     private Vector2 _messageScreenSize;
 
     private GameObject _coins;
@@ -32,7 +32,7 @@ public class UltimateHighScoreController : MonoBehaviour
         Instance = this;
 
         _messageCanvas = transform.FindChild("MessageCanvas").GetComponent<Canvas>();
-        _messages = _messageCanvas.transform.FindChild("Messages").gameObject;
+        //_messages = _messageCanvas.transform.FindChild("Messages").gameObject;
         _messageProto = _messageCanvas.transform.FindChild("MessageProto").gameObject;
         _messageProto.SetActive(false);
 
@@ -73,19 +73,26 @@ public class UltimateHighScoreController : MonoBehaviour
 
         // Show Score message
         var mObj = (GameObject)Instantiate(_messageProto);
+        mObj.transform.SetParent(_messageProto.transform.parent, false);
+        //mObj.transform.position = _messageProto.transform.position;
+        //mObj.transform.rotation = _messageProto.transform.rotation;
+        //mObj.transform.localScale = _messageProto.transform.localScale;
 
         var mRect = mObj.GetComponent<RectTransform>();
-        var uiPos = WorldToUIPosition(worldPosition);
+        var uiPos = WorldToCanvasPosition(GetCanvas(mRect), worldPosition);
 
         var mText = mObj.GetComponent<Text>();
         mText.text = "+" + scoreChange;
 
         mRect.anchoredPosition = uiPos;
-        mObj.transform.parent = _messages.transform;
 
         this.FadeOut(mText, 1.5f);
-        this.FloatUp(mRect, _messageScreenSize.y * 0.2f, 2f);
-        Destroy(mText, 5);
+        //this.FloatUp(mRect, _messageScreenSize.y * 0.2f, 2f);
+
+        //mObj.transform.position = worldPosition;
+        //this.Move(mObj.transform, new Vector3(0, 5f, 0), 2f);
+
+        Destroy(mObj, 5);
 
         mObj.SetActive(true);
 
@@ -95,7 +102,7 @@ public class UltimateHighScoreController : MonoBehaviour
         if (sData.coinPrefab != null)
         {
             var fromPos = worldPosition;
-            var toPos = RectToWorldPosition(sData);
+            var toPos = RectToWorldPosition(sData.text.rectTransform);
 
             //var diff = toPos - fromPos;
             //var toPastPos = fromPos + toPos * 2;
@@ -105,7 +112,7 @@ public class UltimateHighScoreController : MonoBehaviour
             var coinCount = scoreChange;
             var timeToShowCoins = 1.0f;
             var maxTimePerCoin = 0.2f;
-            var timeToMove = 0.25f;
+            var timeToMove = 0.5f;
             var maxCoins = 25;
 
             coinCount = Mathf.Min(maxCoins, coinCount);
@@ -142,20 +149,24 @@ public class UltimateHighScoreController : MonoBehaviour
 
 
 
+
+
     private IEnumerator CreateCoin(GameObject coinPrefab, Text score, string scoreTextAfterChange, Vector3 startPos, Vector3 endPos, float timeToMove, float delay)
     {
         yield return new WaitForSeconds(delay);
 
-        Debug.Log("CreateCoin");
+        //Debug.Log("CreateCoin");
 
 
         var obj = (GameObject)Instantiate(coinPrefab);
         var transform = obj.transform;
         transform.parent = _coins.transform;
         transform.position = startPos;
-
-        this.MoveThenHide(transform, endPos - startPos, timeToMove);
         obj.SetActive(true);
+
+        this.Move(transform, endPos - startPos, timeToMove);
+        //this.Rotate(transform, new Vector3(720, 180, 1080), timeToMove);
+        this.Rotate(transform, new Vector3(10, 180, 60), timeToMove);
 
         yield return new WaitForSeconds(timeToMove);
         obj.SetActive(false);
@@ -166,16 +177,16 @@ public class UltimateHighScoreController : MonoBehaviour
 
 
 
-    private Vector2 WorldToUIPosition(Vector3 worldPosition)
-    {
-        var cam = Camera.mainCamera;
+    //private Vector2 WorldToUIPosition(Vector3 worldPosition)
+    //{
+    //    var cam = Camera.mainCamera;
 
-        var screenPos = cam.WorldToScreenPoint(worldPosition);
-        var screenRatio = new Vector2(screenPos.x / Screen.width, screenPos.y / Screen.height);
-        var uiPos = new Vector2(screenRatio.x * _messageScreenSize.x, screenRatio.y * _messageScreenSize.y);
+    //    var screenPos = cam.WorldToScreenPoint(worldPosition);
+    //    var screenRatio = new Vector2(screenPos.x / Screen.width, screenPos.y / Screen.height);
+    //    var uiPos = new Vector2(screenRatio.x * _messageScreenSize.x, screenRatio.y * _messageScreenSize.y);
 
-        return uiPos;
-    }
+    //    return uiPos;
+    //}
 
     //private Vector2 UIToWorldPosition(Vector3 uiPosition)
     //{
@@ -188,11 +199,48 @@ public class UltimateHighScoreController : MonoBehaviour
     //    return worldPos;
     //}
 
-    private Vector3 RectToWorldPosition(ScoreData sData)
+    private Vector2 WorldToCanvasPosition(Canvas canvas, Vector3 worldPosition)
     {
         var cam = Camera.mainCamera;
 
-        var screenRect = GetScreenRect(sData.text.GetComponent<RectTransform>());
+        var screenPos = cam.WorldToScreenPoint(worldPosition);
+        var screenRatio = new Vector2(screenPos.x / Screen.width, screenPos.y / Screen.height);
+
+        //var size = canvas.GetComponent<CanvasScaler>().referenceResolution * (1.0f / canvas.scaleFactor);
+        var size = new Vector2(Screen.width * canvas.scaleFactor, Screen.height * canvas.scaleFactor);
+
+
+        Debug.Log("screenPos:" + screenPos);
+        Debug.Log("screenRatio:" + screenRatio);
+        Debug.Log("scaleFactor:" + canvas.scaleFactor);
+        Debug.Log("size:" + size);
+
+        return Vector2.Scale(size, screenRatio);
+    }
+
+    private Vector2 WorldToRectPosition(RectTransform transform, Vector3 worldPosition)
+    {
+        var cam = Camera.mainCamera;
+
+        var screenPos = cam.WorldToScreenPoint(worldPosition);
+        var screenRect = GetScreenRect(transform);
+        var screenRatio = new Vector2(screenPos.x / Screen.width, screenPos.y / Screen.height);
+
+        Debug.Log("screenPos:" + screenPos);
+        Debug.Log("screenRect:" + screenRect);
+        Debug.Log("screenRatio:" + screenRatio);
+
+        return screenRect.min + Vector2.Scale(screenRect.size, screenRatio);
+
+        //var uiPos = new Vector2(screenRatio.x * _messageScreenSize.x, screenRatio.y * _messageScreenSize.y);
+        //return uiPos;
+    }
+
+    private Vector3 RectToWorldPosition(RectTransform transform)
+    {
+        var cam = Camera.mainCamera;
+
+        var screenRect = GetScreenRect(transform);
         var screenPos = screenRect.center;
 
         // TODO: find out where center of rect is in world coordinates
@@ -201,9 +249,9 @@ public class UltimateHighScoreController : MonoBehaviour
         //var toPos = cam.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 3f));
 
 
-        Debug.Log("sData.text.transform.position=" + sData.text.transform.position);
-        Debug.Log("screenPos=" + screenPos);
-        Debug.Log("toPos=" + toPos);
+        //Debug.Log("sData.text.transform.position=" + transform.position);
+        //Debug.Log("screenPos=" + screenPos);
+        //Debug.Log("toPos=" + toPos);
 
         return toPos;
     }
@@ -226,7 +274,7 @@ public class UltimateHighScoreController : MonoBehaviour
             // For Canvas mode Screen Space - Overlay there is no Camera; best solution I've found
             // is to use RectTransformUtility.WorldToScreenPoint() with a null camera.
 
-            Vector3 screenCoord = RectTransformUtility.WorldToScreenPoint(rectTransform.parent.GetComponent<Canvas>().worldCamera, corners[i]);
+            Vector3 screenCoord = RectTransformUtility.WorldToScreenPoint(GetCanvasCamera(rectTransform), corners[i]);
 
             if (screenCoord.x < xMin)
                 xMin = screenCoord.x;
@@ -241,6 +289,28 @@ public class UltimateHighScoreController : MonoBehaviour
         Rect result = new Rect(xMin, yMin, xMax - xMin, yMax - yMin);
 
         return result;
+    }
+
+    private static Camera GetCanvasCamera(RectTransform rectTransform)
+    {
+        var canvas = GetCanvas(rectTransform);
+
+        if (canvas != null) { return canvas.worldCamera; }
+
+        return null;
+    }
+
+    private static Canvas GetCanvas(RectTransform rectTransform)
+    {
+        Transform r = rectTransform;
+        while (r.GetComponent<Canvas>() == null)
+        {
+            if (r.parent == null) { return null; }
+
+            r = r.parent;
+        }
+
+        return r.GetComponent<Canvas>();
     }
 
 
@@ -302,21 +372,34 @@ public static class EffectsHelper
         }));
     }
 
-    public static void MoveThenHide(this MonoBehaviour monoBehavior, Transform transform, Vector3 change, float timeSpan)
+    public static void Rotate(this MonoBehaviour monoBehavior, Transform transform, Vector3 totalAngels, float timeSpan)
     {
-        var startPos = transform.position;
-
+        var lastRatio = 0f;
         monoBehavior.StartCoroutine(DoOverTime(timeSpan, (ratio) =>
         {
-            transform.position = startPos + change * ratio;
+            var ratioChange = ratio - lastRatio;
+            lastRatio = ratio;
 
-            if (ratio == 1)
-            {
-                //transform.gameObject.SetActive(false);
-            }
-
+            transform.Rotate(totalAngels * ratioChange);
         }));
     }
+
+
+    //public static void MoveThenHide(this MonoBehaviour monoBehavior, Transform transform, Vector3 change, float timeSpan)
+    //{
+    //    var startPos = transform.position;
+
+    //    monoBehavior.StartCoroutine(DoOverTime(timeSpan, (ratio) =>
+    //    {
+    //        transform.position = startPos + change * ratio;
+
+    //        if (ratio == 1)
+    //        {
+    //            //transform.gameObject.SetActive(false);
+    //        }
+
+    //    }));
+    //}
 
 
     private static IEnumerator DoOverTime(float duration, TransitionAction doAction)

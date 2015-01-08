@@ -96,14 +96,13 @@ Multiple score elements
 
 ## Hour 7
 
-### 13:12-
+### 13:12-14:37
 
 - Create combo spring objects
-- 
+- Add combo text
+
 
 ## TODO
-
-- Create spring combo 
 
 - Make it FUN!
 - Worry about functionality first 

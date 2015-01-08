@@ -218,7 +218,15 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Fix move to position 
 
+## Extra
 
+### 14:38-14:48
+
+-Testing
+
+### 14:49-14:51
+
+- Improve camera
 
 
 ## TODO

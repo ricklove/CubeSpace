@@ -57,19 +57,36 @@ public class UltimateHighScoreController : MonoBehaviour
 
     }
 
-    internal void ResetScore(string id, float startScore)
+    public void ResetScore(string id, float startScore)
     {
         var sData = GetScoreData(id);
         sData.score = startScore;
         sData.text.text = "" + sData.score;
+        sData.combo = 0;
+        AdjustCombo(sData);
     }
+
+    public void ResetCombo(string id)
+    {
+        var sData = GetScoreData(id);
+        sData.combo = 0;
+        AdjustCombo(sData);
+    }
+
+
+    private float? _timeAtLastScore = null;
 
     public void AddScore(string id, float scoreChange, Vector3 worldPosition)
     {
         var sData = GetScoreData(id);
+
+        AdjustCombo(sData);
+
+
+        // Adjust score
         var oldScore = sData.score;
 
-        sData.score += scoreChange;
+        sData.score += scoreChange * sData.combo;
 
         // Show Score message
         var mObj = (GameObject)Instantiate(_messageProto);
@@ -151,6 +168,75 @@ public class UltimateHighScoreController : MonoBehaviour
         }
 
 
+
+        _timeAtLastScore = Time.time;
+    }
+
+    private void AdjustCombo(ScoreData sData)
+    {
+        // Adjust combo
+        if (sData.comboBar != null)
+        {
+            if (_timeAtLastScore != null && Time.time - _timeAtLastScore < sData.comboTimeout)
+            {
+                sData.combo++;
+            }
+            else
+            {
+                sData.combo = 1;
+            }
+
+            if (sData.comboText != null)
+            {
+                sData.comboText.text = "Combo\r\nx"
+                    + sData.combo;
+
+                if (sData.combo == 1)
+                {
+                    this.Scale(sData.comboText.transform, new Vector3(1, 1, 1), 1.5f);
+                    this.FadeOut(sData.comboText, 0);
+                }
+                else
+                {
+                    //sData.comboText.transform.localScale *= 1.5f;
+                    var scale = 1 + 0.25f * Mathf.Log(sData.combo);
+                    this.Scale(sData.comboText.transform, new Vector3(scale * 1.5f, scale * 1.5f, scale * 1.5f), 0.25f);
+                    this.Scale(sData.comboText.transform, new Vector3(scale, scale, scale), 0.5f);
+                    this.FadeOut(sData.comboText, 1f);
+                }
+
+            }
+
+            // Show combo toys
+            if (sData.comboToyProto != null && sData.comboToyContainer != null)
+            {
+                sData.comboToyProto.SetActive(false);
+
+                while (sData.comboToyContainer.transform.childCount < sData.combo)
+                {
+                    // Create Combo toy
+                    var cToy = (GameObject)Instantiate(sData.comboToyProto);
+                    cToy.transform.SetParent(sData.comboToyContainer.transform, true);
+                    cToy.transform.localPosition = new Vector3();
+                    cToy.transform.localScale = sData.comboToyProto.transform.localScale;
+                }
+
+                var activeCount = 0;
+                foreach (Transform c in sData.comboToyContainer.transform)
+                {
+                    if (activeCount < sData.combo)
+                    {
+                        c.gameObject.SetActive(true);
+                        activeCount++;
+                    }
+                    else
+                    {
+                        // TODO: Explode combo toys
+                        c.gameObject.SetActive(false);
+                    }
+                }
+            }
+        }
     }
 
 
@@ -341,9 +427,14 @@ public class ScoreData
 {
     public string id;
     public float score;
+    public float combo;
     public Text text;
-    public GameObject comboBar;
     public GameObject coinPrefab;
+    public GameObject comboBar;
+    public Text comboText;
+    public GameObject comboToyContainer;
+    public GameObject comboToyProto;
+    public float comboTimeout = 10f;
 }
 
 public class UHS
@@ -444,6 +535,12 @@ public static class EffectsHelper
 
     private static IEnumerator DoOverTime(float duration, TransitionAction doAction)
     {
+        if (duration <= 0)
+        {
+            doAction(1);
+            yield break;
+        }
+
         var startTime = Time.time;
         var ratioComplete = 0f;
 

@@ -34,6 +34,7 @@ public class GameLogicController : MonoBehaviour
     void Instance_BlockDropFailed()
     {
         _gameTimer.RemoveTime(5);
+        UHS.Instance.ResetCombo("Score");
     }
 
     void Crane_BlockDropped()

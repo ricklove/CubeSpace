@@ -88,16 +88,18 @@ Multiple score elements
 
 - Finish coins
 
-## Hour 5
+## Hour 5-6
 
-### 10:00-11:25
+### 9:44-11:44
 
 - Fix scaling problem with score message
 
 
+
 ## TODO
 
-- Change all world elements to use world coordinates
+- Refactor canvases
+- Refactor code
 
 - Make it FUN!
 - Worry about functionality first 

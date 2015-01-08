@@ -84,10 +84,10 @@ public class UltimateHighScoreController : MonoBehaviour
         var mText = mObj.GetComponent<Text>();
         mText.text = "+" + scoreChange;
 
-        mRect.anchoredPosition = uiPos;
+        mRect.anchoredPosition = uiPos + new Vector2(0, Screen.height * 0.1f);
 
         this.FadeOut(mText, 1.5f);
-        //this.FloatUp(mRect, _messageScreenSize.y * 0.2f, 2f);
+        this.FloatUp(mRect, Screen.height * 0.2f, 2f);
 
         //mObj.transform.position = worldPosition;
         //this.Move(mObj.transform, new Vector3(0, 5f, 0), 2f);
@@ -206,16 +206,23 @@ public class UltimateHighScoreController : MonoBehaviour
         var screenPos = cam.WorldToScreenPoint(worldPosition);
         var screenRatio = new Vector2(screenPos.x / Screen.width, screenPos.y / Screen.height);
 
-        //var size = canvas.GetComponent<CanvasScaler>().referenceResolution * (1.0f / canvas.scaleFactor);
-        var size = new Vector2(Screen.width * canvas.scaleFactor, Screen.height * canvas.scaleFactor);
+        var targetSize = canvas.GetComponent<CanvasScaler>().referenceResolution;
+        var actualScaledSize = new Vector2(Screen.width / canvas.scaleFactor, Screen.height / canvas.scaleFactor);
+        var xScale = actualScaledSize.x / targetSize.x;
+        var yScale = actualScaledSize.y / targetSize.y;
+
+        var proportionalSize = Vector2.Scale(targetSize, new Vector2(xScale, yScale));
+        var size = proportionalSize;
 
 
         Debug.Log("screenPos:" + screenPos);
         Debug.Log("screenRatio:" + screenRatio);
         Debug.Log("scaleFactor:" + canvas.scaleFactor);
-        Debug.Log("size:" + size);
+        Debug.Log("targetSize:" + targetSize);
+        Debug.Log("actualScaledSize:" + actualScaledSize);
+        Debug.Log("proportionalSize:" + proportionalSize);
 
-        return Vector2.Scale(size, screenRatio);
+        return Vector2.Scale(screenRatio, size);
     }
 
     private Vector2 WorldToRectPosition(RectTransform transform, Vector3 worldPosition)

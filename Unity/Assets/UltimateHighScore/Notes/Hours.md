@@ -69,13 +69,29 @@ Multiple score elements
 
 ## Hour 2
 
-### 5:53-
+### 5:53-7:29
 
 - Adjust Score
+- Show score change on screen
+- Fadeout score change
+- Move score change up
 
+## Hour 3
+
+### 7:45-8:23
+
+- Add coins
+
+## Hour 4
+
+### 8:39-9:35
+
+- Finish coins
 
 
 ## TODO
+
+- Show coins
 
 - Make it FUN!
 - Worry about functionality first 

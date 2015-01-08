@@ -23,6 +23,14 @@ public class PlanetController : MonoBehaviour
     public float heightCenter;
     public float depthCenter;
 
+    public Vector3 NextBlockCenter
+    {
+        get
+        {
+            return _nextBlockCenter.transform.position;
+        }
+    }
+
     private GameObject _rotation;
     private GameObject _rotationTarget;
     private GameObject _xAxis;

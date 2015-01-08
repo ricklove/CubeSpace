@@ -146,7 +146,7 @@ public class SwipeHelper
     public float minContinueDistance = 0.001f;
     public float maxClickDistance = 0.05f;
 
-    public bool shouldShowDebug = true;
+    public bool shouldShowDebug = false;
 
     private float _startTime;
     private Vector2 _startPosition;

@@ -72,7 +72,10 @@ public class GameLogicController : MonoBehaviour
 
         if (_lastScore != score)
         {
+            var change = score - _lastScore;
             _lastScore = score;
+
+            UHS.Instance.AddScore("Score", change, PlanetController.Instance.NextBlockCenter);
 
             _cubeCount.text = "" + blockCount;
             _cubeLength.text = "";

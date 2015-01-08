@@ -86,8 +86,11 @@ public class UltimateHighScoreController : MonoBehaviour
 
         mRect.anchoredPosition = uiPos + new Vector2(0, Screen.height * 0.1f);
 
-        this.FadeOut(mText, 1.5f);
-        this.FloatUp(mRect, Screen.height * 0.2f, 2f);
+        var timeToShowMessage = 0.75f;
+        this.FadeOut(mText, timeToShowMessage);
+        this.FloatUp(mRect, Screen.height * 0.2f, timeToShowMessage);
+        mRect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        this.Scale(mRect, new Vector3(1, 1, 1), timeToShowMessage);
 
         //mObj.transform.position = worldPosition;
         //this.Move(mObj.transform, new Vector3(0, 5f, 0), 2f);
@@ -113,7 +116,8 @@ public class UltimateHighScoreController : MonoBehaviour
             var timeToShowCoins = 1.0f;
             var maxTimePerCoin = 0.2f;
             var timeToMove = 0.5f;
-            var maxCoins = 25;
+            var timeToDeflateScoreText = 3f;
+            var maxCoins = 11;
 
             coinCount = Mathf.Min(maxCoins, coinCount);
 
@@ -137,6 +141,8 @@ public class UltimateHighScoreController : MonoBehaviour
             }
 
             // Show score in text
+            var oldScale = new Vector3(1, 1, 1);//sData.text.transform.localScale;
+            this.Scale(sData.text.transform, oldScale, timeToDeflateScoreText);
         }
         else
         {
@@ -173,6 +179,9 @@ public class UltimateHighScoreController : MonoBehaviour
         Destroy(obj, timeToMove + 0.1f);
 
         score.text = scoreTextAfterChange;
+
+        // Scale up text
+        score.transform.localScale *= 1.05f;
     }
 
 
@@ -388,6 +397,30 @@ public static class EffectsHelper
             lastRatio = ratio;
 
             transform.Rotate(totalAngels * ratioChange);
+        }));
+    }
+
+
+    public static void Scale(this MonoBehaviour monoBehavior, Transform transform, Vector3 target, float timeSpan)
+    {
+        var lastRatio = 0f;
+        monoBehavior.StartCoroutine(DoOverTime(timeSpan, (ratio) =>
+        {
+            if (ratio == 1)
+            {
+                transform.localScale = target;
+                return;
+            }
+
+            var diff = target - transform.localScale;
+            var remainingRatio = 1.0f - ratio;
+
+            var ratioChange = ratio - lastRatio;
+            lastRatio = ratio;
+            var ticksRemaining = remainingRatio / ratioChange;
+
+            transform.localScale = transform.localScale + diff / ticksRemaining;
+
         }));
     }
 

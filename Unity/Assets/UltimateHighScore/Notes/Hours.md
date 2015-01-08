@@ -94,12 +94,16 @@ Multiple score elements
 
 - Fix scaling problem with score message
 
+## Hour 7
 
+### 13:12-
+
+- Create combo spring objects
+- 
 
 ## TODO
 
-- Refactor canvases
-- Refactor code
+- Create spring combo 
 
 - Make it FUN!
 - Worry about functionality first 

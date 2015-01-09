@@ -13,6 +13,7 @@ public class GameLogicController : MonoBehaviour
 
     private int _blockCount = 1;
     private int _lastScore = -1;
+    private Color _lastColor = Color.red;
 
     void Awake()
     {
@@ -82,7 +83,7 @@ public class GameLogicController : MonoBehaviour
             }
             else
             {
-                UHS.Instance.AddScore("Score", change, PlanetController.Instance.NextBlockCenter);
+                UHS.Instance.AddScore("Score", change, PlanetController.Instance.NextBlockCenter, _lastColor);
             }
 
             _cubeCount.text = "" + blockCount;
@@ -91,7 +92,9 @@ public class GameLogicController : MonoBehaviour
             //_cubeCount.text = "" + blockCount + " (" + w + "*" + h + "*" + d + ")";
             //_cubeLength.text = "Cube: " + cubeCount + " (" + cubeLength + "*" + cubeLength + "*" + cubeLength + ")";
 
-            _cubeCount.color = GetNextColor();
+            var color = GetNextColor();
+            _cubeCount.color = color;
+            _lastColor = color;
             //            _cubeLength.color = GetNextColor();
 
             HighestScore = Mathf.Max(HighestScore, score);
@@ -126,6 +129,7 @@ public class GameLogicController : MonoBehaviour
             case 5: return Color.cyan;
             default: return Color.white; // Not possible
         }
+
     }
 
     void Update()

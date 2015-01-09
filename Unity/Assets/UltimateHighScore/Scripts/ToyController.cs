@@ -8,6 +8,7 @@ public class ToyController : MonoBehaviour
     public event ToyAction Exploded;
 
     public ParticleSystem _explosion;
+    public ParticleSystem _flare;
     private bool _hasExplosionStarted = false;
 
 
@@ -39,5 +40,12 @@ public class ToyController : MonoBehaviour
 
         _explosion.Play();
         _hasExplosionStarted = true;
+    }
+
+    public void SetColor(Color color)
+    {
+        Debug.Log("Toy.SetColor color=" + color);
+
+        _flare.startColor = color;
     }
 }

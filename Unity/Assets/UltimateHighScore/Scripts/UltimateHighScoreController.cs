@@ -65,24 +65,24 @@ public class UltimateHighScoreController : MonoBehaviour
         sData.score = startScore;
         sData.text.text = "" + sData.score;
         sData.combo = 0;
-        AdjustCombo(sData);
+        AdjustCombo(sData, Color.green);
     }
 
     public void ResetCombo(string id)
     {
         var sData = GetScoreData(id);
         sData.combo = 0;
-        AdjustCombo(sData);
+        AdjustCombo(sData, Color.green);
     }
 
 
     private float? _timeAtLastScore = null;
 
-    public void AddScore(string id, float scoreChange, Vector3 worldPosition)
+    public void AddScore(string id, float scoreChange, Vector3 worldPosition, Color color)
     {
         var sData = GetScoreData(id);
 
-        AdjustCombo(sData);
+        AdjustCombo(sData, color);
 
 
         // Adjust score
@@ -155,7 +155,7 @@ public class UltimateHighScoreController : MonoBehaviour
                     scoreTextAfterChange = "" + sData.score;
                 }
 
-                StartCoroutine(CreateCoin(sData.coinPrefab, sData.text, scoreTextAfterChange,
+                StartCoroutine(CreateCoin(sData.coinPrefab, color, sData.text, scoreTextAfterChange,
                     fromPos, toPos, timeToMove, i * timePerCoin));
 
             }
@@ -173,6 +173,7 @@ public class UltimateHighScoreController : MonoBehaviour
             sData.text.text = "" + sData.score;
         }
 
+        sData.text.color = (color * 0.75f) + new Color(0.25f, 0.25f, 0.25f, 1);
 
 
         _timeAtLastScore = Time.time;
@@ -184,7 +185,7 @@ public class UltimateHighScoreController : MonoBehaviour
         _coinFlare.Stop();
     }
 
-    private void AdjustCombo(ScoreData sData)
+    private void AdjustCombo(ScoreData sData, Color color)
     {
         // Adjust combo
         if (sData.comboBar != null)
@@ -238,7 +239,12 @@ public class UltimateHighScoreController : MonoBehaviour
                 {
                     if (i < sData.combo)
                     {
-                        c.gameObject.SetActive(true);
+                        if (!c.gameObject.activeSelf)
+                        {
+                            c.gameObject.SetActive(true);
+                            StartCoroutine(SetColorAfterDelay(c.GetComponent<ToyController>(), color, 0.5f));
+                        }
+
                     }
                     else
                     {
@@ -249,6 +255,12 @@ public class UltimateHighScoreController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private IEnumerator SetColorAfterDelay(ToyController toyController, Color color, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        toyController.SetColor(color);
     }
 
     private static IEnumerator ExplodeToyAfterDelay(Transform c, float delay)
@@ -283,8 +295,9 @@ public class UltimateHighScoreController : MonoBehaviour
 
 
 
-    private IEnumerator CreateCoin(GameObject coinPrefab, Text score, string scoreTextAfterChange, Vector3 startPos, Vector3 endPos, float timeToMove, float delay)
+    private IEnumerator CreateCoin(GameObject coinPrefab, Color color, Text score, string scoreTextAfterChange, Vector3 startPos, Vector3 endPos, float timeToMove, float delay)
     {
+        yield return new WaitForSeconds(Random.RandomRange(0.01f, 0.1f));
         yield return new WaitForSeconds(delay);
 
         //Debug.Log("CreateCoin");
@@ -294,6 +307,9 @@ public class UltimateHighScoreController : MonoBehaviour
         var transform = obj.transform;
         transform.parent = _coins.transform;
         transform.position = startPos;
+
+        obj.GetComponent<BlockController>().SetColor(color);
+
         obj.SetActive(true);
 
         this.Move(transform, endPos - startPos, timeToMove);

@@ -16,6 +16,8 @@ public class CraneController : MonoBehaviour
     public GameObject _attachedBlock;
     private PlanetController _planet;
 
+    public float timeBetweenBlocks = 0.5f;
+
     private float? timeToCreateBlock;
 
     void Awake()
@@ -46,7 +48,7 @@ public class CraneController : MonoBehaviour
         {
             if (timeToCreateBlock == null)
             {
-                timeToCreateBlock = Time.time + 1f;
+                timeToCreateBlock = Time.time + timeBetweenBlocks;
             }
 
             if (Time.time > timeToCreateBlock)

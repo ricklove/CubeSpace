@@ -228,6 +228,9 @@ Use cutting edge motion tracking technology to control the game with your device
 
 - Improve camera
 
+### 19:40-19:44
+
+- Decrease time to lay blocks
 
 
 ## TODO

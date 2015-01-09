@@ -111,6 +111,12 @@ Multiple score elements
 
 - Add flare in core
 
+### 19:44-20:19
+
+- Add diversity in coins
+- Add color
+
+
 
 ## TODO
 

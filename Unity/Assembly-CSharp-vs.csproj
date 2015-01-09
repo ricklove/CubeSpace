@@ -53,7 +53,9 @@
      <Compile Include="Assets\Scripts\GameLogicController.cs" />
      <Compile Include="Assets\Scripts\InputManagerController.cs" />
      <Compile Include="Assets\Scripts\PlanetController.cs" />
+     <Compile Include="Assets\SimpleParticlePack\Scripts\ParticleTester.cs" />
      <Compile Include="Assets\UltimateHighScore\Scripts\SimpleSpring.cs" />
+     <Compile Include="Assets\UltimateHighScore\Scripts\ToyController.cs" />
      <Compile Include="Assets\UltimateHighScore\Scripts\UltimateHighScoreController.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>

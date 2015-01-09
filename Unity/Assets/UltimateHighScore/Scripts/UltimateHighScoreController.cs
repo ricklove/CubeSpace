@@ -15,6 +15,7 @@ public class UltimateHighScoreController : MonoBehaviour
     private Vector2 _messageScreenSize;
 
     private GameObject _coins;
+    private ParticleSystem _coinFlare;
 
 
     private ScoreData GetScoreData(string id)
@@ -37,6 +38,7 @@ public class UltimateHighScoreController : MonoBehaviour
         _messageProto.SetActive(false);
 
         _coins = transform.FindChild("Coins").gameObject;
+        _coinFlare = _coins.transform.FindChild("Flare").FindChild("Flare").GetComponent<ParticleSystem>();
 
         var scalar = _messageCanvas.GetComponent<CanvasScaler>();
         _messageScreenSize = scalar.referenceResolution;
@@ -155,7 +157,11 @@ public class UltimateHighScoreController : MonoBehaviour
 
                 StartCoroutine(CreateCoin(sData.coinPrefab, sData.text, scoreTextAfterChange,
                     fromPos, toPos, timeToMove, i * timePerCoin));
+
             }
+
+            _coinFlare.Play();
+            StartCoroutine(StopFlare(timeToShowCoins));
 
             // Show score in text
             var oldScale = new Vector3(1, 1, 1);//sData.text.transform.localScale;
@@ -170,6 +176,12 @@ public class UltimateHighScoreController : MonoBehaviour
 
 
         _timeAtLastScore = Time.time;
+    }
+
+    private IEnumerator StopFlare(float timeToShowCoins)
+    {
+        yield return new WaitForSeconds(timeToShowCoins);
+        _coinFlare.Stop();
     }
 
     private void AdjustCombo(ScoreData sData)
@@ -221,22 +233,50 @@ public class UltimateHighScoreController : MonoBehaviour
                     cToy.transform.localScale = sData.comboToyProto.transform.localScale;
                 }
 
-                var activeCount = 0;
+                var i = 0;
                 foreach (Transform c in sData.comboToyContainer.transform)
                 {
-                    if (activeCount < sData.combo)
+                    if (i < sData.combo)
                     {
                         c.gameObject.SetActive(true);
-                        activeCount++;
                     }
                     else
                     {
-                        // TODO: Explode combo toys
-                        c.gameObject.SetActive(false);
+                        StartCoroutine(ExplodeToyAfterDelay(c, (i - sData.combo) * 0.1f));
                     }
+
+                    i++;
                 }
             }
         }
+    }
+
+    private static IEnumerator ExplodeToyAfterDelay(Transform c, float delay)
+    {
+        yield return new WaitForEndOfFrame();
+        c.transform.parent = c.transform.root;
+
+        yield return new WaitForSeconds(delay);
+
+        // TODO: Explode combo toys
+        //c.gameObject.SetActive(false);
+        var toy = c.gameObject.GetComponent<ToyController>();
+        ToyController.ToyAction action = null;
+
+        action = () =>
+        {
+            toy.gameObject.SetActive(false);
+            toy.Exploded -= action;
+        };
+
+        toy.Exploded += action;
+        toy.Explode();
+
+        yield return new WaitForSeconds(0.25f);
+        c.renderer.active = false;
+
+        yield return new WaitForSeconds(5f);
+        Destroy(c.gameObject);
     }
 
 

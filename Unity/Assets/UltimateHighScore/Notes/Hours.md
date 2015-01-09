@@ -101,10 +101,18 @@ Multiple score elements
 - Create combo spring objects
 - Add combo text
 
+## Hour 8
+
+### 16:44-17:28
+
+- Add explosions
+
+### 17:29-18:07
+
+- Add flare in core
+
 
 ## TODO
 
 - Make it FUN!
 - Worry about functionality first 
-
-- Add graphical assets
